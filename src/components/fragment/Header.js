@@ -10,23 +10,23 @@ const Header = () => {
         <>
             <header className="header">
                 <div className="container">
-                    <Link href="/" className="logo">
+                    <Link to={"/"} className="logo">
                         <img src={Logo} alt="" />
                     </Link>
                     <nav className="navi">
                         <ul className="navi-list">
                             <li className="navi-item">
-                                <Link>
+                                <Link to={'/'}>
                                     <i className="fas fa-home"></i>
                                 </Link>
                             </li>
                             <li className="navi-item">
-                                <Link>
+                                <Link to={'/images/popular'}>
                                     <i className="far fa-compass"></i>
                                 </Link>
                             </li>
                             <li className="navi-item">
-                                <Link>
+                                <Link to={'/users/1/profile'}>
                                     <i className="far fa-user"></i>
                                 </Link>
                             </li>

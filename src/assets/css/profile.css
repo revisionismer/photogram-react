@@ -19,7 +19,7 @@
 
 /* Profile */
 .profile {
-  height: 170px;
+  height: 205px;
   display: flex;
   margin: 54px 0 44px;
 }
@@ -211,9 +211,6 @@
 }
 
 /* Sub2 */
-.popular {
-  width: 100%;
-}
 .popular .profileContainer {
   flex-direction: column;
 }
