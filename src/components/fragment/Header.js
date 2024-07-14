@@ -21,12 +21,12 @@ const Header = () => {
                                 </Link>
                             </li>
                             <li className="navi-item">
-                                <Link to={'/images/popular'}>
+                                <Link to={'/image/popular'}>
                                     <i className="far fa-compass"></i>
                                 </Link>
                             </li>
                             <li className="navi-item">
-                                <Link to={'/users/1/profile'}>
+                                <Link to={'/user/profile'}>
                                     <i className="far fa-user"></i>
                                 </Link>
                             </li>

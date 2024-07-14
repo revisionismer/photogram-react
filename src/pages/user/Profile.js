@@ -1,13 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Person from '../../assets/images/person.jpeg';
-import { Link } from 'react-router-dom';
 
 import '../../assets/css/profile.css';
 
+import axios from 'axios';
+
+import { Link, Navigate, json, useLocation, useNavigate, useParams } from 'react-router-dom';
+
+// 2024-07-11 : 여기까지
 const Profile = () => {
 
+    var ACCESS_TOKEN = getCookie('access_token');
+
+    function getCookie(key) {
+
+        let result = null;
+        let cookie = document.cookie.split(';');
+
+        cookie.some(function (item) {
+            item = item.replace(' ', '');
+
+            let dic = item.split('=');
+
+            if (key === dic[0]) {
+                result = dic[1];
+                return true;
+            }
+            return false;
+        });
+        return result;
+    }
+
     // 2024-07-06 : modal 띄우는거 까지함
+    const navigate = useNavigate();
 
     // 1-1. 사용자 정보 메뉴 열기
     function popup(obj) {
@@ -17,11 +43,6 @@ const Profile = () => {
     // 1-2. 사용자 정보 메뉴 닫기
     function closePopup(obj) {
         obj.style.setProperty("display", "none");
-    }
-
-    // 1-3. 사용자 정보(회원정보, 로그아웃, 닫기) 모달 닫기
-    function modalInfo(obj) {
-        obj.style.setProperty.css("display", "none");
     }
 
     function openModalImage() {
@@ -49,11 +70,138 @@ const Profile = () => {
     }
 
     function goUserInfoPage() {
-        location.href = "/users/1/update";
+        navigate("/user/update");
     }
 
     function updateUserProfilePage() {
-        location.href = "/image/upload";
+        navigate("/image/upload");
+    }
+
+
+    function deleteCookie(key) {
+        document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+
+    function logout() {
+
+        axios.get('/api/auth/logout',
+            // 1-1. 첫번째 인자 값 : 서버로 보낼 데이터
+            null,
+            // 1-2. 두번째 인자값 : headers 에 세팅할 값들 ex) content-type, media 방식 등
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                }
+            }
+        ).then(function (res) {
+            console.log(res);
+
+            deleteCookie('access_token');
+
+            navigate("/signin");
+
+
+        }).catch(function (res) {
+            console.log(res);
+            if (res.response.status === 500) {
+                alert(res.response.statusText);
+                return;
+            }
+
+            alert(res.response.data.message);
+            return;
+        }
+        )
+    }
+
+    const [user, setUser] = useState({
+        id: "",
+        username: "",
+        profileImageUrl: null,
+        role: "",
+        name: "",
+        website: "",
+        bio: "",
+        email: "",
+        phone: "",
+        gender: ""
+    });
+
+    const [users, setUsers] = useState([]);
+
+    const [id, setId] = useState();
+
+    useEffect(() => {
+
+        const getUserList = async () => {
+
+            axios.get(`http://127.0.0.1:8080/api/users/list`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        //                      'Authorization': 'Bearer ' + ACCESS_TOKEN
+                    }
+                }
+            ).then(function (res) {
+                console.log({ ...res.data.data });
+                setUsers([...res.data.data]);
+
+
+            }).catch(function (res) {
+                console.log(res);
+                if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                    // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                    alert(res.response.data.message);
+
+                    // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                    deleteCookie('access_token');
+                    navigate("/signin");
+                    return;
+                }
+            })
+
+        }
+
+        getUserList();
+
+        // 2024-07-12 : 고민중
+        const getUser = async () => {
+            axios.get(`http://127.0.0.1:8080/api/users/s/info`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'Authorization': 'Bearer ' + ACCESS_TOKEN
+                    }
+                }
+            ).then(function (res) {
+                console.log(res.data.data);
+                setUser(res.data.data);
+                setId(res.data.data.id);
+
+            }).catch(function (res) {
+                console.log(res);
+                if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                    // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                    alert(res.response.data.message);
+
+                    // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                    deleteCookie('access_token');
+                    navigate("/signin");
+                    return;
+                }
+            })
+
+        }
+
+        // useEffect 마지막에는 함수 안에서 변동되는 값들을 넣어준다.(변경감지)
+        getUser();
+
+    }, [ACCESS_TOKEN, navigate]);
+
+    function userInfo(userId) {
+
+        console.log({ userId });
+        console.log({ id })
     }
 
     return (
@@ -68,7 +216,7 @@ const Profile = () => {
                                 <input type="file" name="profileImageFile" style={{ display: 'none' }} id="userProfileImageInput" />
                             </form>
 
-                            <img className="profile-image" src={Person} id="userProfileImage" />
+                            <img alt='' className="profile-image" src={Person} id="userProfileImage" />
 
                         </div>
 
@@ -78,7 +226,7 @@ const Profile = () => {
                     {/*유저정보 및 사진등록 구독하기*/}
                     <div className="profile-right">
                         <div className="name-group">
-                            <h2></h2>
+                            <h2>{user.name}</h2>
 
                             <div>
                                 <button className="cta" onClick={() => updateUserProfilePage()}>사진등록</button>
@@ -106,13 +254,41 @@ const Profile = () => {
                             </ul>
                         </div>
                         <div className="state">
-                            <h4></h4>
+                            <h4>{user.bio}</h4>
                             {/* 2024-06-09 : a태그로 바꾸고 웹사이트 연결해줌 */}
-                            <Link>웹사이트</Link>
+                            <Link to={'' + user.website}>{user.website}</Link>
                         </div>
                     </div>
                     {/*유저정보 및 사진등록 구독하기*/}
+
+                    <div id='user-list'>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>계정 이름</th>
+                                    <th>사용자 이름</th>
+                                    <th>권한</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {users.map((user, index) => {
+                                    return (
+                                        <tr key={index} onClick={() => userInfo(user.id)}>
+                                            <td>{user.id}</td>
+                                            <td>{user.username}</td>
+                                            <td>{user.name}</td>
+                                            <td>{user.role}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+
+                        </table>
+
+                    </div>
                 </div>
+
 
             </section>
 
@@ -129,7 +305,7 @@ const Profile = () => {
                                 {/*	<a th:text="${image.postImageUrl}"></a> */}
                                 <div className="img-box">
                                     <Link>
-                                        <img className="subscribe-image" />
+                                        <img alt='' className="subscribe-image" />
                                     </Link>
                                 </div>
                             </div>
@@ -146,7 +322,7 @@ const Profile = () => {
             <div id='modal-info' className="modal-info">
                 <div className="modal">
                     <button onClick={() => goUserInfoPage()}>회원정보 변경</button>
-                    <button onClick={null}>로그아웃</button>
+                    <button onClick={() => logout()}>로그아웃</button>
                     <button onClick={() => closeModalInfo()}>취소</button>
                 </div>
             </div>

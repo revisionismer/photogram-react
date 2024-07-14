@@ -40,10 +40,10 @@ function App() {
       <Header />
       <Routes>
         <Route path='/*' exact={true} element={<Story />}></Route>
-        <Route path='/images/story/*' exact={true} element={<Story />}></Route>
-        <Route path='/images/popular/*' exact={true} element={<Popular />}></Route>
-        <Route path='/users/:id/profile/*' exact={true} element={<Profile />}></Route>
-        <Route path='/users/:id/update/*' exact={true} element={<Update />}></Route>
+        <Route path='/image/story/*' exact={true} element={<Story />}></Route>
+        <Route path='/image/popular/*' exact={true} element={<Popular />}></Route>
+        <Route path='/user/profile/*' exact={true} element={<Profile />}></Route>
+        <Route path='/user/update/*' exact={true} element={<Update />}></Route>
 
         <Route path='/image/upload' exact={true} element={<Upload />}></Route>
       </Routes>

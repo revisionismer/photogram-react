@@ -7,7 +7,6 @@
   src: url(../font/Billabong.ttf);
 }
 
-
 .profileContainer {
   display: flex;
   justify-content: space-between;
@@ -417,6 +416,10 @@
 
 .modal-info .modal button:not(:last-child) {
   border-bottom: 1px solid #dbdbdb;
+}
+
+#user-list {
+  width: 400px;
 }
 
 /* Animation */

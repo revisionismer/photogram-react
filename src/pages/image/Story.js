@@ -17,14 +17,14 @@ const Story = () => {
                         <div className="story-list__item">
                             <div className="sl__item__header">
                                 <div>
-                                    <img className="profile-image" src={Home} />
+                                    <img className="profile-image" src={Home} alt=''/>
                                 </div>
                                 <div>
                                     <div>ssar</div>
                                 </div>
                             </div>
                             <div className="sl__item__img">
-                                <img src={Person} />
+                                <img src={Person} alt='' />
                             </div>
                             <div className="sl__item__contents">
                                 <div className="sl__item__contents__icon">
