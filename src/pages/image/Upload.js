@@ -2,6 +2,9 @@ import React from 'react';
 
 import '../../assets/css/upload.css';
 
+import Logo from '../../assets/images/logo.jpg';
+import Person from '../../assets/images/person.jpeg';
+
 const Upload = () => {
     return (
         <>
@@ -11,7 +14,7 @@ const Upload = () => {
                     {/*사진업로드 로고*/}
                     <div className="upload-top">
                         <a href="home.html" className="homeArea">
-                            <img src="/photogram/images/logo.jpg" alt="" />
+                            <img src={Logo} alt="" />
                         </a>
                         <p>사진 업로드</p>
                     </div>
@@ -22,7 +25,7 @@ const Upload = () => {
                     <form className="upload-form" action="/image" method="post" encType="multipart/form-data">
                         <input type="file" name="file" className="file" onChange={null} />
                         <div className="upload-img">
-                            <img src="/photogram/images/person.jpeg" alt="" id="imageUploadPreview" />
+                            <img src={Person} alt="" id="imageUploadPreview" />
                         </div>
 
                         {/*사진설명 + 업로드버튼*/}
