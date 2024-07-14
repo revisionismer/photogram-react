@@ -332,7 +332,7 @@ const Profile = () => {
             <div id='modal-image' className="modal-image">
                 <div className="modal">
                     <p>프로필 사진 바꾸기</p>
-                    <button>사진 업로드</button>
+                    <button onClick={() => updateUserProfilePage()}>사진 업로드</button>
                     <button onClick={() => closeModalImage()}>취소</button>
                 </div>
             </div>
