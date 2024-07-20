@@ -12,10 +12,7 @@ import Update from './pages/user/Update';
 
 import { Routes, Route, useLocation } from 'react-router-dom';
 
-
-
 function App() {
-
 
   const { pathname } = useLocation();
 
@@ -39,6 +36,7 @@ function App() {
     <div>
       <Header />
       <Routes>
+
         <Route path='/*' exact={true} element={<Story />}></Route>
         <Route path='/image/story/*' exact={true} element={<Story />}></Route>
         <Route path='/image/popular/*' exact={true} element={<Popular />}></Route>

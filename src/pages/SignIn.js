@@ -45,7 +45,7 @@ const SignIn = () => {
 
                 console.log("엑세스 토큰 : " + ACCESS_TOKEN);
 
-                navigate("/")
+                navigate("/image/story");
 
             }).catch(function (res) {
                 console.log(res);
