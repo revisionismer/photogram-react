@@ -5,7 +5,48 @@ import Person from '../../assets/images/person.jpeg';
 
 import '../../assets/css/story.css';
 
+import axios from 'axios';
+
+import Base64 from 'base-64';
+import { Link, Navigate, json, useLocation, useNavigate, useParams } from 'react-router-dom';
+
+
 const Story = () => {
+
+    // 2024-07-06 : modal 띄우는거 까지함
+    const navigate = useNavigate();
+
+    var ACCESS_TOKEN = getCookie('access_token');
+
+    function getCookie(key) {
+
+        let result = null;
+        let cookie = document.cookie.split(';');
+
+        cookie.some( function(item) {
+            item = item.replace(' ', '');
+
+            let dic = item.split('=');
+
+			if(key === dic[0]) {
+				result = dic[1];
+				return true;
+			}
+            return false;
+        });
+        return result;
+    }
+
+    // 2024-07-17 : base64로 로그인 정보 꺼내오기
+    // 2024-07-18 : 토큰이 없다면 서버에서 예외터지도록 변경
+    let payload;
+    let loginUser;
+
+    if(ACCESS_TOKEN != null) {
+        payload = ACCESS_TOKEN.substring(ACCESS_TOKEN.indexOf('.') + 1, ACCESS_TOKEN.lastIndexOf('.'));
+        loginUser = JSON.parse(Base64.decode(payload));
+    }
+
     return (
         <>
             <div className="main">

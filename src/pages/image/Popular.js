@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import '../../assets/css/popular.css';
@@ -9,6 +9,7 @@ const Popular = () => {
 
     const area = document.getElementById('popular');
 
+    console.log(area);
     return (
         <>
             <div id='popular' className="popular">
