@@ -24,15 +24,15 @@ const Profile = () => {
         let result = null;
         let cookie = document.cookie.split(';');
 
-        cookie.some( function(item) {
+        cookie.some(function (item) {
             item = item.replace(' ', '');
 
             let dic = item.split('=');
 
-			if(key === dic[0]) {
-				result = dic[1];
-				return true;
-			}
+            if (key === dic[0]) {
+                result = dic[1];
+                return true;
+            }
             return false;
         });
         return result;
@@ -43,7 +43,7 @@ const Profile = () => {
     let payload;
     let loginUser;
 
-    if(ACCESS_TOKEN != null) {
+    if (ACCESS_TOKEN != null) {
         payload = ACCESS_TOKEN.substring(ACCESS_TOKEN.indexOf('.') + 1, ACCESS_TOKEN.lastIndexOf('.'));
         loginUser = JSON.parse(Base64.decode(payload));
     }
@@ -58,10 +58,13 @@ const Profile = () => {
         obj.style.setProperty("display", "none");
     }
 
-    function openModalImage() {
+    function openModalImage(pageOwner) {
         var obj = document.getElementById('modal-image');
 
-        popup(obj);
+        if (pageOwner) {
+            popup(obj);
+        }
+
     }
 
     function closeModalImage() {
@@ -82,6 +85,262 @@ const Profile = () => {
         closePopup(obj);
     }
 
+    function openModalSubscribe(pageUserId) {
+        var obj = document.getElementById('modal-subscribe');
+
+        console.log(pageUserId);
+
+        axios.get(`http://127.0.0.1:8080/api/subscribes/s/${pageUserId}/all`,
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Authorization': 'Bearer ' + ACCESS_TOKEN
+                }
+            }).then(function (res) {
+                console.log(res);
+
+                let item = getSubscribeModalItem(res.data.data);
+
+                document.getElementById('subscribeModalList').innerHTML = `
+                
+                ` + item;
+
+
+            }).catch(function (res) {
+                console.log(res);
+
+                if (res.code === "ERR_NETWORK") {
+                    console.log("서버와의 연결이 되어 있지 않습니다.");
+                    return false;
+
+                }
+
+                if (res.response.status === 500 || res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                    // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                    alert(res.response.data.message);
+
+                    // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                    deleteCookie('access_token');
+                    navigate("/signin");
+                    return;
+                }
+            }
+            )
+
+        popup(obj);
+    }
+
+    function reloadModalSubscribe(pageUserId) {
+
+        axios.get(`http://127.0.0.1:8080/api/subscribes/s/${pageUserId}/all`,
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Authorization': 'Bearer ' + ACCESS_TOKEN
+                }
+            }).then(function (res) {
+                console.log(res);
+
+                let item = getSubscribeModalItem(res.data.data);
+
+                document.getElementById('subscribeModalList').innerHTML = `
+                
+                ` + item;
+
+
+            }).catch(function (res) {
+                console.log(res);
+
+                if (res.code === "ERR_NETWORK") {
+                    console.log("서버와의 연결이 되어 있지 않습니다.");
+                    return false;
+
+                }
+
+                if (res.response.status === 500 || res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                    // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                    alert(res.response.data.message);
+
+                    // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                    deleteCookie('access_token');
+                    navigate("/signin");
+                    return;
+                }
+            }
+            )
+
+    }
+
+
+
+    // 2-3. 구독자 정보 html 그려서 만들어 주는 함수.(주의 : html을 동적으로 만들때에는 class를 className으로 명하면 css가 안먹는다.) -> 2024-07-23
+    function getSubscribeModalItem(user) {
+
+        // 2024-07-24 : 여기까지함
+        // 2024-07-26 : 구독 취소는 이쪽에서
+        document.querySelector('#subscribeModalList').addEventListener('click', function (e) {
+
+            var userId = Number(e.target.id.substring(17, 18));
+
+            // 구독하고 있는 유저 아이디를 가져와야함
+            if (e.target.innerText === "구독취소") {
+
+                axios.delete(`http://127.0.0.1:8080/api/subscribes/s/${userId}`,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json; charset=UTF-8',
+                            'Authorization': 'Bearer ' + ACCESS_TOKEN
+                        }
+                    }).then(function (res) {
+                        console.log(res);
+
+                        reloadModalSubscribe(pageUserId);
+
+                        setSubscribeCount(res.data.data.subscribeCount);
+
+                    }).catch(function (res) {
+                        console.log(res);
+
+                        if (res.code === "ERR_NETWORK") {
+                            console.log("서버와의 연결이 되어 있지 않습니다.");
+                            return false;
+
+                        }
+
+                        if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                            // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                            alert(res.response.data.message);
+
+                            // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                            deleteCookie('access_token');
+                            navigate("/signin");
+                            return;
+                        }
+                    }
+                    )
+            }
+
+
+        });
+
+        let item = ``;
+
+        for (var i = 0; i < user.length; i++) {
+            item += `
+                <div class="subscribe__item" id="subscribeModalItem-${user[i].id}">
+                    <div class="subscribe__img">
+                        <img src=${user[i].profileImageUrl === null ? Person : "/profileImg/" + user[i].profileImageUrl}/>
+                    </div>
+                    <div class="subscribe__text">
+		                <h2>${user[i].username}</h2>
+	                </div>
+                    
+            `;
+            if (user[i].equalUserState) {
+
+                if (!user[i].subscribeState) {
+                    item += `
+                            <div class="subscribe__btn">
+                                <button id="do_subscribe_${user[i].id}" class="cta">구독하기</button>
+                            </div> 
+                        </div>
+                    `;
+                } else {
+                    item += `
+                            <div class="subscribe__btn">
+                                <button id="cancel_subscribe_${user[i].userId}" class="cta blue">구독취소</button>
+                            </div> 
+                        </div>
+                    `;
+                }
+
+            } else {
+
+                item += `</div>`;
+            }
+        }
+
+        return item;
+
+    }
+
+    function doSubscribe(pageUserId) {
+        console.log(pageUserId);
+
+        axios.post(`http://127.0.0.1:8080/api/subscribes/s/${pageUserId}`,
+            null,
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Authorization': 'Bearer ' + ACCESS_TOKEN
+                }
+            }).then(function (res) {
+                console.log(res);
+                setSubscribeState(true);
+
+            }).catch(function (res) {
+                console.log(res);
+
+                if (res.code === "ERR_NETWORK") {
+                    console.log("서버와의 연결이 되어 있지 않습니다.");
+                    return false;
+
+                }
+
+                if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                    // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                    alert(res.response.data.message);
+
+                    // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                    deleteCookie('access_token');
+                    navigate("/signin");
+                    return;
+                }
+            }
+            );
+    }
+
+    // 2024-07-26 : 여기까지 구현
+    function undoSubscribe(pageUserId) {
+
+        axios.delete(`http://127.0.0.1:8080/api/subscribes/s/${pageUserId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Authorization': 'Bearer ' + ACCESS_TOKEN
+                }
+            }).then(function (res) {
+                console.log(res.data.data.subscribeCount);
+
+                setSubscribeState(false);
+
+            }).catch(function (res) {
+                console.log(res);
+
+                if (res.code === "ERR_NETWORK") {
+                    console.log("서버와의 연결이 되어 있지 않습니다.");
+                    return false;
+
+                }
+
+                if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                    // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                    alert(res.response.data.message);
+
+                    // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                    deleteCookie('access_token');
+                    navigate("/signin");
+                    return;
+                }
+            }
+            )
+    }
+
+    function closeModalSubscribe() {
+        var obj = document.getElementById('modal-subscribe');
+        closePopup(obj);
+    }
+
     function goUserInfoPage() {
         navigate("/user/update");
     }
@@ -89,7 +348,6 @@ const Profile = () => {
     function updateUserProfilePage() {
         navigate("/image/upload");
     }
-
 
     function deleteCookie(key) {
         document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
@@ -106,85 +364,92 @@ const Profile = () => {
                     'Content-Type': 'application/json; charset=UTF-8',
                 }
             }
-            ).then(function (res) {
-                console.log(res);
+        ).then(function (res) {
+            console.log(res);
 
-                deleteCookie('access_token');
-                
-                navigate("/signin");
+            deleteCookie('access_token');
+
+            navigate("/signin");
 
 
-            }).catch(function (res) {
-                console.log(res);
-                if (res.response.status === 500) {
-                    alert(res.response.statusText);
-                    return;
-                }
-
-                alert(res.response.data.message);
+        }).catch(function (res) {
+            console.log(res);
+            if (res.response.status === 500) {
+                alert(res.response.statusText);
                 return;
             }
+
+            alert(res.response.data.message);
+            return;
+        }
         )
     }
 
     const [user, setUser] = useState({
-        id : "",
-        username : "",
-        profileImageUrl : null,
-        role : "",
-        name : "",
-        website : "",
-        bio : "",
-        email : "",
-        phone : "",
-        gender : ""
+        id: "",
+        username: "",
+        profileImageUrl: null,
+        role: "",
+        name: "",
+        website: "",
+        bio: "",
+        email: "",
+        phone: "",
+        gender: "",
+        pageOwer: false,
+        subscribeCount: null,
+        subscribeState: false
     });
 
     const [users, setUsers] = useState([]);
 
     const [principalId, setPricipalId] = useState({});
 
-    const [id, setId] = useState();
+    const [pageUserId, setPageUserId] = useState();
+
+    const [subscribeState, setSubscribeState] = useState();
+
+    const [subscribeCount, setSubscribeCount] = useState();
 
     useEffect(() => {
 
-        if(loginUser) {
-            
+        if (loginUser) {
+
             setPricipalId(loginUser.id)
         }
 
     }, [loginUser]);
 
     useEffect(() => {
-        
+
         const getUserList = async () => {
 
             axios.get(`http://127.0.0.1:8080/api/users/list`,
                 {
                     headers: {
                         'Content-Type': 'application/json; charset=UTF-8',
-//                      'Authorization': 'Bearer ' + ACCESS_TOKEN
+                        //                      'Authorization': 'Bearer ' + ACCESS_TOKEN
                     }
                 }
             ).then(function (res) {
-                console.log({...res.data.data});
+                console.log({ ...res.data.data });
                 setUsers([...res.data.data]);
-                
-                
+
+
             }).catch(function (res) {
                 console.log(res);
 
-                if(res.code === "ERR_NETWORK") {
+                if (res.code === "ERR_NETWORK") {
                     alert("서버와의 연결이 되어있지 않습니다.");
                     navigate("/signin");
                     return false;
-                    
+
                 }
 
                 if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
                     // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
                     alert(res.response.data.message);
-    
+
                     // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
                     deleteCookie('access_token');
                     navigate("/signin");
@@ -208,76 +473,80 @@ const Profile = () => {
             ).then(function (res) {
                 console.log(res.data.data);
                 setUser(res.data.data);
-                setId(res.data.data.id);
-                    
+                setPageUserId(res.data.data.id);
+                setSubscribeState(res.data.data.subscribeState);
+                setSubscribeCount(res.data.data.subscribeCount);
+
             }).catch(function (res) {
                 console.log(res);
-                
-                if(res.code === "ERR_NETWORK") {
+
+                if (res.code === "ERR_NETWORK") {
                     console.log("서버와의 연결이 되어 있지 않습니다.");
                     return false;
-                    
+
                 }
 
                 if (res.response.status === 500 || res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
                     // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
                     alert(res.response.data.message);
-    
+
                     // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
                     deleteCookie('access_token');
                     navigate("/signin");
                     return;
                 }
             })
-    
+
         }
-    
+
         // useEffect 마지막에는 함수 안에서 변동되는 값들을 넣어준다.(변경감지)
         getUser();
 
     }, [ACCESS_TOKEN, navigate]);
 
     // 2024-07-16 : 여기까지
-    function userInfo(id) {
+    function userInfo(pageUserId) {
 
-        axios.get(`http://127.0.0.1:8080/api/users/s/${id}/info`,
+        axios.get(`http://127.0.0.1:8080/api/users/s/${pageUserId}/info`,
             {
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
                     'Authorization': 'Bearer ' + ACCESS_TOKEN
                 }
             }
-            ).then(function (res) {
-                console.log(res.data.data);
-                setUser(res.data.data);
-                setId(res.data.data.id);
-                    
-            }).catch(function (res) {
-                console.log(res);
-                
-                if(res.code === "ERR_NETWORK") {
-                    console.log("서버와의 연결이 되어 있지 않습니다.");
-                    return false;
-                    
-                }
+        ).then(function (res) {
+            console.log(res.data.data);
+            setUser(res.data.data);
+            setPageUserId(res.data.data.id);
+            setSubscribeState(res.data.data.subscribeState);
+            setSubscribeCount(res.data.data.subscribeCount);
 
-                if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
-                    // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
-                    alert(res.response.data.message);
-    
-                    // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
-                    deleteCookie('access_token');
-                    navigate("/signin");
-                    return;
-                }
+        }).catch(function (res) {
+            console.log(res);
+
+            if (res.code === "ERR_NETWORK") {
+                console.log("서버와의 연결이 되어 있지 않습니다.");
+                return false;
+
             }
+
+            if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                alert(res.response.data.message);
+
+                // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                deleteCookie('access_token');
+                navigate("/signin");
+                return;
+            }
+        }
         )
-        
+
     }
 
     // 2024-07-18 : 프로필 이미지 업데이트까지
     function profileImageUpload() {
-	
+
         // 3-2. 이미지 업로드 창 띄우기
         document.getElementById("profile-img-input").click();
 
@@ -286,18 +555,18 @@ const Profile = () => {
             let f = e.target.files[0];
 
             // 3-4. 이미지가 아닌 파일은 다시 등록하라고 알러트
-		    if(!f.type.match("image.*")) {
+            if (!f.type.match("image.*")) {
                 alert("이미지를 등록해주세요.");
-                e.target.value = "";  
-                
-                closeModalImage(); 
+                e.target.value = "";
+
+                closeModalImage();
 
                 return false;
-                
+
             }
 
-		    // 3-5. formData 생성
-		    let formData = new FormData();
+            // 3-5. formData 생성
+            let formData = new FormData();
             formData.append('file', e.target.files[0]);
 
             console.log(formData);
@@ -308,7 +577,7 @@ const Profile = () => {
                     headers: {
                         'Authorization': 'Bearer ' + ACCESS_TOKEN,
                         'Content-Type': 'multipart/form-data'
-                        
+
                     }
                 }).then(function (res) {
                     console.log(res);
@@ -320,27 +589,27 @@ const Profile = () => {
                     reader.readAsDataURL(f);
 
                     closeModalImage();
-                        
+
                 }).catch(function (res) {
                     console.log(res);
-                    
-                    if(res.code === "ERR_NETWORK") {
+
+                    if (res.code === "ERR_NETWORK") {
                         console.log("서버와의 연결이 되어 있지 않습니다.");
                         return false;
-                        
+
                     }
-    
+
                     if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
                         // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
                         alert(res.response.data.message);
-        
+
                         // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
                         deleteCookie('access_token');
                         navigate("/signin");
                         return;
                     }
                 }
-            );
+                );
 
         });
     }
@@ -352,7 +621,8 @@ const Profile = () => {
                 <div className="profileContainer">
                     {/*유저이미지*/}
                     <div className="profile-left">
-                        <div className="profile-img-wrap story-border" id='userImgArea' onClick={() => openModalImage()}>
+
+                        <div className="profile-img-wrap story-border" id='userImgArea' onClick={() => openModalImage(user.pageOwner)}>
                             <form id="userProfileImageForm">
                                 <input type="file" id="profile-img-input" name="profileImageFile" style={{ display: 'none' }} />
                             </form>
@@ -370,34 +640,35 @@ const Profile = () => {
                             <h2>{user.username}</h2>
 
                             <div>
-                                {principalId === id ? <button className="cta" onClick={() => updateUserProfilePage()}>사진등록</button> : ''}
-                                
-                            </div>
-                        {principalId !== id ? 
-                            <div>
-                                <div>
-                                    <button className="cta blue">구독취소</button>
-                                </div>
+                                {principalId === pageUserId ? <button className="cta" onClick={() => updateUserProfilePage()}>사진등록</button> : ''}
 
-                                <div>
-                                    <button className="cta">구독하기</button>
-                                </div>
                             </div>
-                            : ''
-                        }
-                            {principalId === id ? <button className="modi" onClick={() => openModalInfo()}><i className="fas fa-cog"></i></button> : ''}
-                            
+                            {principalId !== pageUserId ?
+                                <div>
+                                    <div>
+                                        {subscribeState === true ?
+                                            <button className="cta blue" onClick={() => undoSubscribe(user.id)}>구독취소</button>
+                                            :
+                                            <button className="cta" onClick={() => doSubscribe(user.id)}>구독하기</button>
+                                        }
+                                    </div>
+
+                                </div>
+                                : ''
+                            }
+                            {principalId === pageUserId ? <button className="modi" onClick={() => openModalInfo()}><i className="fas fa-cog"></i></button> : ''}
+
                         </div>
 
-                        <div className="subscribe">
+                        <div id='subscribe' className="subscribe">
                             <ul>
-                                <li><Link>게시물<span></span></Link></li>
+                                <li><Link>게시물<span>10</span></Link></li>
                                 <li>
-                                    <a><span></span></a>
+                                    <Link onClick={() => openModalSubscribe(user.id)}>구독정보<span id='subscribeCount'>{subscribeCount}</span></Link>
                                 </li>
                             </ul>
                         </div>
-                        <div className="state">
+                        <div id='state' className="state">
                             <h4>{user.bio}</h4>
                             {/* 2024-06-09 : a태그로 바꾸고 웹사이트 연결해줌 */}
                             <Link to={user.website}>{user.website}</Link>
@@ -427,13 +698,13 @@ const Profile = () => {
                                     );
                                 })}
                             </tbody>
-                            
+
                         </table>
-                    
+
                     </div>
                 </div>
             </section>
-          
+
             {/*게시물컨섹션*/}
             <section id="tab-content">
                 {/*게시물컨컨테이너*/}
@@ -481,11 +752,11 @@ const Profile = () => {
             {/* 프로필 사진 바꾸기 모달 end */}
 
             {/* 구독 정보 모달 start */}
-            <div className="modal-subscribe">
+            <div id='modal-subscribe' className="modal-subscribe">
                 <div className="subscribe">
                     <div className="subscribe-header">
                         <span>구독정보</span>
-                        <button onClick={null}><i className="fas fa-times"></i></button>
+                        <button onClick={() => closeModalSubscribe()}><i className="fas fa-times"></i></button>
                     </div>
 
                     <div className="subscribe-list" id="subscribeModalList">

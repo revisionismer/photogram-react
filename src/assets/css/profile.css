@@ -347,6 +347,7 @@
 }
 .modal-subscribe .subscribe .subscribe-list .subscribe__item {
   display: flex;
+  
   height: 70px;
   padding: 10px;
 }
@@ -364,7 +365,7 @@
   border-radius: 50%;
 }
 .modal-subscribe .subscribe .subscribe-list .subscribe__item .subscribe__text {
-  padding-top: 5px;
+  /* padding-top: 5px; */
 }
 .modal-subscribe .subscribe .subscribe-list .subscribe__item .subscribe__text h2 {
   font-size: 16px;
