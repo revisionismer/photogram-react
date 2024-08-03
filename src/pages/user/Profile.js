@@ -8,7 +8,6 @@ import axios from 'axios';
 
 import Base64 from 'base-64';
 
-
 import { Link, Navigate, json, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 // 2024-07-16 : decode하기위해 라이브러리 하나 받아와야함 
@@ -170,8 +169,6 @@ const Profile = () => {
             )
 
     }
-
-
 
     // 2-3. 구독자 정보 html 그려서 만들어 주는 함수.(주의 : html을 동적으로 만들때에는 class를 className으로 명하면 css가 안먹는다.) -> 2024-07-23
     function getSubscribeModalItem(user) {
@@ -397,19 +394,23 @@ const Profile = () => {
         phone: "",
         gender: "",
         pageOwer: false,
-        subscribeCount: null,
-        subscribeState: false
+        subscribeCount: 0,
+        subscribeState: false,
+        totalStoryCount: 0,
+        images : ""
     });
 
     const [users, setUsers] = useState([]);
 
-    const [principalId, setPricipalId] = useState({});
+    const [principalId, setPricipalId] = useState();
 
     const [pageUserId, setPageUserId] = useState();
 
     const [subscribeState, setSubscribeState] = useState();
 
     const [subscribeCount, setSubscribeCount] = useState();
+
+    const [images, setImages] = useState([]);
 
     useEffect(() => {
 
@@ -428,7 +429,7 @@ const Profile = () => {
                 {
                     headers: {
                         'Content-Type': 'application/json; charset=UTF-8',
-                        //                      'Authorization': 'Bearer ' + ACCESS_TOKEN
+                        //  'Authorization': 'Bearer ' + ACCESS_TOKEN
                     }
                 }
             ).then(function (res) {
@@ -476,6 +477,7 @@ const Profile = () => {
                 setPageUserId(res.data.data.id);
                 setSubscribeState(res.data.data.subscribeState);
                 setSubscribeCount(res.data.data.subscribeCount);
+                setImages(res.data.data.images);
 
             }).catch(function (res) {
                 console.log(res);
@@ -520,6 +522,7 @@ const Profile = () => {
             setPageUserId(res.data.data.id);
             setSubscribeState(res.data.data.subscribeState);
             setSubscribeCount(res.data.data.subscribeCount);
+            setImages(res.data.data.images);
 
         }).catch(function (res) {
             console.log(res);
@@ -662,7 +665,7 @@ const Profile = () => {
 
                         <div id='subscribe' className="subscribe">
                             <ul>
-                                <li><Link>게시물<span>10</span></Link></li>
+                                <li><Link>게시물<span>{user.totalStoryCount}</span></Link></li>
                                 <li>
                                     <Link onClick={() => openModalSubscribe(user.id)}>구독정보<span id='subscribeCount'>{subscribeCount}</span></Link>
                                 </li>
@@ -677,7 +680,7 @@ const Profile = () => {
                     {/*유저정보 및 사진등록, 구독하기*/}
 
                     <div id='user-list'>
-                        <table>
+                        <table className='table'>
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -714,13 +717,19 @@ const Profile = () => {
                         {/*게시물컨 그리드배열*/}
                         <div className="tab-1-content-inner">
                             {/*아이템들*/}
+                            {images.map( (image, index) => {
+                                return (
+                                    /*	<a th:text="${image.postImageUrl}"></a> */
+                                    <div key={index} className="img-box">
+                                        <Link>
+                                            <img className="subscribe-image" alt='' src={`/storyImg/${image.storyImageUrl}`}/>
+                                        </Link>
+                                        <p className='img-caption'>{image.caption}</p>
+                                    </div>
+                                )
+                            })}
                             <div>
-                                {/*	<a th:text="${image.postImageUrl}"></a> */}
-                                <div className="img-box">
-                                    <Link>
-                                        <img alt='' className="subscribe-image" />
-                                    </Link>
-                                </div>
+                                
                             </div>
 
                             {/*아이템들end*/}

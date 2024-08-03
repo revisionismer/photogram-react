@@ -238,6 +238,7 @@
   height: 100%;
 }
 
+
 /* Event */
 #tab-1-content,
 #tab-2-content,
@@ -258,6 +259,11 @@
 .tab-border a span {
   color: #000;
   font-weight: bold;
+}
+
+#tab-content #tab-1-content .tab-1-content-inner .img-box .img-caption {
+  font-weight: bold;
+  color: #262626;
 }
 
 
@@ -421,7 +427,31 @@
 }
 
 #user-list {
+  display: flex;
   width: 400px;
+  padding-left: 10px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 300px;
+  margin: 1rem auto;
+  background-color: white;
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 3px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  text-align: center;
+}
+
+tbody tr:hover {
+  background-color: #d3d3d3;
+  opacity: 0.9;
+  cursor: pointer;
 }
 
 /* Animation */
