@@ -23,15 +23,15 @@ const Story = () => {
         let result = null;
         let cookie = document.cookie.split(';');
 
-        cookie.some( function(item) {
+        cookie.some(function (item) {
             item = item.replace(' ', '');
 
             let dic = item.split('=');
 
-			if(key === dic[0]) {
-				result = dic[1];
-				return true;
-			}
+            if (key === dic[0]) {
+                result = dic[1];
+                return true;
+            }
             return false;
         });
         return result;
@@ -42,7 +42,7 @@ const Story = () => {
     let payload;
     let loginUser;
 
-    if(ACCESS_TOKEN != null) {
+    if (ACCESS_TOKEN != null) {
         payload = ACCESS_TOKEN.substring(ACCESS_TOKEN.indexOf('.') + 1, ACCESS_TOKEN.lastIndexOf('.'));
         loginUser = JSON.parse(Base64.decode(payload));
     }
@@ -53,8 +53,10 @@ const Story = () => {
 
     // 2024-07-30 : 여기까지ㄴ
     const [stories, setStories] = useState([]);
-    
+
     const [lastIndex, setLastIndex] = useState();
+
+    var page = 1;
 
     function onScroll() {
 
@@ -68,15 +70,12 @@ const Story = () => {
 
         var windowHeight = window.innerHeight;
 
-        var checkNum = scrollTop - ( documentHeight - windowHeight );
+        var checkNum = scrollTop - (documentHeight - windowHeight);
 
-        var page = 0;
+        if (checkNum < 1 && checkNum > -1 && !lastIndex) {
 
-        if(checkNum < 1 && checkNum > -1 && !lastIndex) {
-            
-            page++;
             console.log(page);
-         
+
             const getStories = async () => {
                 axios.get(`http://127.0.0.1:8080/api/images/s/story/all?page=${page}`,
                     {
@@ -86,34 +85,35 @@ const Story = () => {
                         }
                     }
                 ).then(function (res) {
-    
+
                     // 2024-08-07 : 여기까지
                     console.log(res);
                     setLastIndex(res.data.data.images.last);
-      
-                    if(res.data.data.totalCount > 0) {
-                      
-                        for(var i = 0; i < res.data.data.totalCount; i++) {
+                    page = page + 1;
+
+                    if (res.data.data.totalCount > 0) {
+
+                        for (var i = 0; i < res.data.data.totalCount; i++) {
                             let storyItem = getStoryItem(res.data.data.images.content[i]);
                             document.getElementById('storyList').innerHTML += storyItem;
                         }
-                    
+
                     }
-                    
+
                 }).catch(function (res) {
                     console.log(res);
-    
+
                     if (res.code === "ERR_NETWORK") {
                         alert("서버와의 연결이 되어있지 않습니다.");
                         navigate("/signin");
                         return false;
-    
+
                     }
-    
+
                     if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
                         // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
                         alert(res.response.data.message);
-    
+
                         // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
                         deleteCookie('access_token');
                         navigate("/signin");
@@ -121,13 +121,12 @@ const Story = () => {
                     }
                 })
             }
-    
+
             getStories();
-		}
+        }
 
     }
 
-    
     function getStoryItem(image) {
         let item = `
             <div class='story-list__item'>
@@ -144,16 +143,20 @@ const Story = () => {
                 </div>
                 <div class="sl__item__contents">
                     <div class="sl__item__contents__icon">  
-                        <button>
-                            <i class="fas fa-heart active" id="storyLikeIcon-1"></i>
+                        <button id="likeBtn">
+            ${image.likeState === true ?
+                `<i class="fas fa-heart active" id="storyLikeIcon_${image.imageId}"></i>`
+                :
+                `<i class="far fa-heart" id="storyLikeIcon_${image.imageId}"></i>`
+            }                    
                         </button>
                     </div>
-                    <span class="like"><b id="storyLikeCount-1">0</b>likes</span>
+                    <span class="like"><b id="storyLikeCount_${image.imageId}">${image.totalLikeCount}</b>likes</span>
                     <div class="sl__item__contents__content">
                         <p>Person.jpeg</p>
                     </div>
                     <div id="storyCommentList-1">
-                        <div class="sl__item__contents__comment" id="storyCommentItem-1">
+                        <div class="sl__item__contents__comment" id="storyCommentItem">
                             <p>
                                 <b>admin :</b> 왜?
                             </p>
@@ -168,10 +171,111 @@ const Story = () => {
                 </div>
             </div>
         `;
-		
-		return item;
-	}
-    
+
+        return item;
+    }
+
+    // 2024-08-14 : 한 번만 실행되게 처리
+    useEffect(() => {
+
+        const parent = document.querySelector('#storyList');
+
+        if (parent !== null) {
+
+            parent.addEventListener('click', (e) => {
+
+                const imageId = e.target.id.slice(14);
+
+                let likeIcon = document.getElementById(`storyLikeIcon_${imageId}`);
+                let likeCount = document.getElementById(`storyLikeCount_${imageId}`);
+
+                if (imageId > 0) {
+                    console.log(imageId);
+
+                    if (likeIcon.classList.contains("far")) {  // 좋아요
+                        axios.post(`http://127.0.0.1:8080/api/images/s/story/${imageId}/like`,
+                            null,
+                            {
+                                headers: {
+                                    'Content-Type': 'application/json; charset=UTF-8',
+                                    'Authorization': 'Bearer ' + ACCESS_TOKEN
+                                }
+                            }).then(function (res) {
+                                console.log(res);
+
+                                likeIcon.classList.remove('far');
+
+                                likeIcon.classList.add('fas');
+                                likeIcon.classList.add('active');
+
+                                likeCount.innerText = res.data.data.totalLikeCount;
+
+                            }).catch(function (res) {
+                                console.log(res);
+
+                                if (res.code === "ERR_NETWORK") {
+                                    console.log("서버와의 연결이 되어 있지 않습니다.");
+                                    return false;
+
+                                }
+
+                                if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                                    // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                                    alert(res.response.data.message);
+
+                                    // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                                    deleteCookie('access_token');
+                                    navigate("/signin");
+                                    return;
+                                }
+                            })
+                    } else {
+                        console.log("좋아요 취소!!");
+
+                        // 주의 : delete는 데이터 싣는 곳이 없음 null로 표기하면 안됨.
+                        axios.delete(`http://127.0.0.1:8080/api/images/s/story/${imageId}/unlike`,
+                            {
+                                headers: {
+                                    'Content-Type': 'application/json; charset=UTF-8',
+                                    'Authorization': 'Bearer ' + ACCESS_TOKEN
+                                }
+                            }).then(function (res) {
+                                console.log(res);
+
+                                likeIcon.classList.remove('fas');
+                                likeIcon.classList.remove('active');
+
+                                likeIcon.classList.add('far');
+
+                                likeCount.innerText = res.data.data.totalLikeCount;
+
+                            }).catch(function (res) {
+                                console.log(res);
+
+                                if (res.code === "ERR_NETWORK") {
+                                    console.log("서버와의 연결이 되어 있지 않습니다.");
+                                    return false;
+
+                                }
+
+                                if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                                    // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                                    alert(res.response.data.message);
+
+                                    // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                                    deleteCookie('access_token');
+                                    navigate("/signin");
+                                    return;
+                                }
+                            })
+                    }
+                }
+            });
+
+        }
+
+    }, []);
+
 
     useEffect(() => {
         window.addEventListener('scroll', onScroll);
@@ -194,13 +298,13 @@ const Story = () => {
             ).then(function (res) {
 
                 console.log(res);
-                if(res.data.data.totalCount > 0) {
-                    
+                if (res.data.data.totalCount > 0) {
+
                     setStories(res.data.data.images.content);
                     setLastIndex(res.data.data.images.last);
-                
+
                 }
-                
+
             }).catch(function (res) {
                 console.log(res);
 
@@ -240,7 +344,7 @@ const Story = () => {
                                 <div key={index} className={`story-list__item`}>
                                     <div className="sl__item__header">
                                         <div>
-                                            <img className="profile-image" src={story.profileImageUrl === null ? Person : `/profileImg/${story.profileImageUrl}`} alt='' width={'100%'} height={'100%'}/>
+                                            <img className="profile-image" src={story.profileImageUrl === null ? Person : `/profileImg/${story.profileImageUrl}`} alt='' width={'100%'} height={'100%'} />
                                         </div>
                                         <div>
                                             <div>{story.username}</div>
@@ -250,14 +354,18 @@ const Story = () => {
                                         <img src={story.storyImageUrl === null ? Person : `/storyImg/${story.storyImageUrl}`} alt='' />
                                     </div>
                                     <div className="sl__item__contents">
-                                        <div className="sl__item__contents__icon">  
+                                        <div className="sl__item__contents__icon">
                                             <button>
-                                                <i className="fas fa-heart active" id="storyLikeIcon-1"></i>
+                                                {story.likeState === true ?
+                                                    <i className="fas fa-heart active" id={'storyLikeIcon_' + story.imageId}></i>
+                                                    :
+                                                    <i className="far fa-heart" id={'storyLikeIcon_' + story.imageId}></i>
+                                                }
                                             </button>
                                         </div>
-                                        <span className="like"><b id="storyLikeCount-1">0</b>likes</span>
+                                        <span className="like"><b id={`storyLikeCount_${story.imageId}`}>{story.totalLikeCount}</b>likes</span>
                                         <div className="sl__item__contents__content">
-                                            <p>Person.jpeg</p>
+                                            <p>{story.caption}</p>
                                         </div>
                                         <div id="storyCommentList-1">
                                             <div className="sl__item__contents__comment" id="storyCommentItem-1">
@@ -274,11 +382,11 @@ const Story = () => {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                             );
                         })}
                         {/*스토리 아이템 끝*/}
-                    
+
                     </article>
                 </section>
             </div>
