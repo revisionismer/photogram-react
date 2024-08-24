@@ -51,7 +51,7 @@ const Story = () => {
         document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
 
-    // 2024-07-30 : 여기까지ㄴ
+    // 2024-07-30 : 여기까지
     const [stories, setStories] = useState([]);
 
     const [lastIndex, setLastIndex] = useState();
@@ -155,18 +155,26 @@ const Story = () => {
                     <div class="sl__item__contents__content">
                         <p>Person.jpeg</p>
                     </div>
-                    <div id="storyCommentList-1">
-                        <div class="sl__item__contents__comment" id="storyCommentItem">
-                            <p>
-                                <b>admin :</b> 왜?
-                            </p>
-                            <button><i class="fas fa-times"></i></button>
-                        </div>
+                    <div id="storyCommentList_${image.imageId}">`;
+        image.comments.forEach((comment) => {
+            item += `
+                                <div class="sl__item__contents__comment" id="storyCommentItem_${comment.commentId}">` +
+                `<p>` +
+                `<b>${comment.username} :</b> ${comment.content}` +
+                `</p>
+                            `;
 
+            if (loginUser.id === comment.userId) {
+                item += `<button><i id="deleteCommentBtn_${comment.commentId}" class="fas fa-times"></i></button>`;
+            }
+            item += `</div>`
+        });
+        item += `
+                        
                     </div>
                     <div class="sl__item__input">
-                        <input type="text" placeholder="댓글 달기..." id="storyCommentInput-1" />
-                        <button type="button">게시</button>
+                        <input type="text" placeholder="댓글 달기..." id="storyCommentInput_${image.imageId}" name="storyCommentInput_${image.imageId}" />
+                        <button id="commentBtn_${image.imageId}">게시</button>
                     </div>
                 </div>
             </div>
@@ -174,6 +182,169 @@ const Story = () => {
 
         return item;
     }
+
+    function debounce(func, timeout = 300) {
+        let timer;
+        return (...args) => {
+            if (!timer) {
+                func.apply(this, args)
+            }
+
+            clearTimeout(timer);
+
+            timer = setTimeout(() => {
+                timer = undefined;
+            }, timeout);
+        };
+    }
+
+    // 2024-08-20 : 댓글 삭제 진행중
+    useEffect(() => {
+
+        const parent = document.querySelector('#storyList');
+
+        if (parent !== null) {
+
+            parent.addEventListener('click', (e) => {
+
+                const commentId = e.target.id.slice(17);
+
+                let storyCommentItem = document.getElementById(`storyCommentItem_${commentId}`);
+                let commentCancelBtn = document.getElementById(`deleteCommentBtn_${commentId}`);
+
+                if (commentId > 0) {
+
+                    if (commentCancelBtn) {
+                        if (e.target.id === commentCancelBtn.id) {
+                            console.log(commentCancelBtn)
+
+                            axios.delete(`http://127.0.0.1:8080/api/comments/${commentId}`,
+                                {
+                                    headers: {
+                                        'Content-Type': 'application/json; charset=UTF-8',
+                                        'Authorization': 'Bearer ' + ACCESS_TOKEN
+                                    }
+                                }).then(function (res) {
+                                    console.log(res);
+
+                                    storyCommentItem.style.display = 'none';
+
+                                }).catch(function (res) {
+                                    console.log(res);
+
+                                    if (res.code === "ERR_NETWORK") {
+                                        console.log("서버와의 연결이 되어 있지 않습니다.");
+                                        return false;
+
+                                    }
+
+                                    if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                                        // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                                        alert(res.response.data.message);
+
+                                        // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                                        deleteCookie('access_token');
+                                        navigate("/signin");
+                                        return;
+                                    }
+                                })
+
+                        }
+                    }
+
+                }
+
+            });
+
+        }
+    }, [])
+
+    // 2024-08-19 : 댓글 달기 까지 성공, 나중에 commentDto에 엔티티 직접 반환하는거 수정해줘야함
+    useEffect(() => {
+
+        const parent = document.querySelector('#storyList');
+
+        if (parent !== null) {
+
+            parent.addEventListener('click', (e) => {
+
+                // 댓글 게시 버튼 눌렀을때 이미지 id 가져오기.
+                const imageId = e.target.id.slice(11);
+
+                let commentListArea = document.querySelector(`#storyCommentList_${imageId}`);
+
+                let commentInput = document.getElementById(`storyCommentInput_${imageId}`);
+
+                if (commentInput != null) {
+
+                    let commentObject = {
+                        content: commentInput.value,
+                        imageId: imageId,
+                        userId: loginUser.id
+                    }
+
+                    console.log(commentObject);
+
+                    if (commentObject.content === "") {
+                        alert("댓글을 작성해주세요!");
+                        commentInput.focus();
+                        return;
+                    }
+
+                    axios.post(`http://127.0.0.1:8080/api/comments`,
+                        JSON.stringify(commentObject),
+                        {
+                            headers: {
+                                'Content-Type': 'application/json; charset=UTF-8',
+                                'Authorization': 'Bearer ' + ACCESS_TOKEN
+                            }
+                        }).then(function (res) {
+                            console.log(res);
+
+                            let comment = res.data.data;
+
+                            let content =
+                                `<p>` +
+                                `<b>${comment.username} :</b> ${comment.content}` +
+                                `</p>` +
+                                `<button><i id="deleteCommentBtn_${comment.commentId}" class="fas fa-times"></i></button>`;
+
+                            let newComment = document.createElement('div');
+                            newComment.innerHTML = content;
+                            newComment.setAttribute("class", "sl__item__contents__comment");
+                            newComment.setAttribute("id", `storyCommentItem_${comment.commentId}`);
+
+                            commentListArea.appendChild(newComment);
+
+
+                        }).catch(function (res) {
+                            console.log(res);
+
+                            if (res.code === "ERR_NETWORK") {
+                                console.log("서버와의 연결이 되어 있지 않습니다.");
+                                return false;
+
+                            }
+
+                            if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                                // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                                alert(res.response.data.message);
+
+                                // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                                deleteCookie('access_token');
+                                navigate("/signin");
+                                return;
+                            }
+                        })
+
+                    commentInput.value = "";
+
+                }
+
+            })
+        }
+
+    }, []);
 
     // 2024-08-14 : 한 번만 실행되게 처리
     useEffect(() => {
@@ -184,6 +355,7 @@ const Story = () => {
 
             parent.addEventListener('click', (e) => {
 
+                // 좋아요 아이콘 눌렀을때 이미지 id 가져오기
                 const imageId = e.target.id.slice(14);
 
                 let likeIcon = document.getElementById(`storyLikeIcon_${imageId}`);
@@ -274,7 +446,7 @@ const Story = () => {
 
         }
 
-    }, []);
+    }, [ACCESS_TOKEN, navigate]);
 
 
     useEffect(() => {
@@ -367,18 +539,24 @@ const Story = () => {
                                         <div className="sl__item__contents__content">
                                             <p>{story.caption}</p>
                                         </div>
-                                        <div id="storyCommentList-1">
-                                            <div className="sl__item__contents__comment" id="storyCommentItem-1">
-                                                <p>
-                                                    <b>admin :</b> 왜?
-                                                </p>
-                                                <button><i className="fas fa-times"></i></button>
-                                            </div>
+                                        <div id={`storyCommentList_${story.imageId}`}>
+                                            {story.comments.map((comment, index) =>
+                                                <div key={index} className="sl__item__contents__comment" id={`storyCommentItem_${comment.commentId}`}>
+                                                    <p>
+                                                        <b>{comment.username} :</b> {comment.content}
+                                                    </p>
+                                                    {story.comments[index].userId === loginUser.id ?
+                                                        <button><i id={`deleteCommentBtn_${comment.commentId}`} className="fas fa-times"></i></button>
+                                                        :
+                                                        ''
+                                                    }
+                                                </div>
+                                            )}
 
                                         </div>
                                         <div className="sl__item__input">
-                                            <input type="text" placeholder="댓글 달기..." id="storyCommentInput-1" />
-                                            <button type="button">게시</button>
+                                            <input type="text" placeholder="댓글 달기..." id={`storyCommentInput_${story.imageId}`} />
+                                            <button id={`commentBtn_${story.imageId}`}>게시</button>
                                         </div>
                                     </div>
                                 </div>
