@@ -397,7 +397,7 @@ const Profile = () => {
         subscribeCount: 0,
         subscribeState: false,
         totalStoryCount: 0,
-        images : ""
+        images: ""
     });
 
     const [users, setUsers] = useState([]);
@@ -717,20 +717,20 @@ const Profile = () => {
                         {/*게시물컨 그리드배열*/}
                         <div className="tab-1-content-inner">
                             {/*아이템들*/}
-                            {images.map( (image, index) => {
+                            {images.map((image, index) => {
                                 return (
                                     /*	<a th:text="${image.postImageUrl}"></a> */
                                     <div key={index} className="img-box">
                                         <Link>
-                                            <img className="subscribe-image" alt='' src={`/storyImg/${image.storyImageUrl}`}/>
+                                            <img className="subscribe-image" alt='' src={`/storyImg/${image.storyImageUrl}`} />
                                         </Link>
+                                        <div className='comment'>
+                                            <Link><i className='fas fa-heart'></i>{image.totalLikeCount}</Link>
+                                        </div>
                                         <p className='img-caption'>{image.caption}</p>
                                     </div>
                                 )
                             })}
-                            <div>
-                                
-                            </div>
 
                             {/*아이템들end*/}
                         </div>
