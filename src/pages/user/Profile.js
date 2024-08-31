@@ -725,7 +725,12 @@ const Profile = () => {
                                             <img className="subscribe-image" alt='' src={`/storyImg/${image.storyImageUrl}`} />
                                         </Link>
                                         <div className='comment'>
-                                            <Link><i className='fas fa-heart'></i>{image.totalLikeCount}</Link>
+                                            {image.likeState === true ? 
+                                                <Link><i className='fas fa-heart'></i>{image.totalLikeCount}</Link> 
+                                                : 
+                                                <Link><i className='far fa-heart'></i>{image.totalLikeCount}</Link>
+                                            }
+                                            
                                         </div>
                                         <p className='img-caption'>{image.caption}</p>
                                     </div>
