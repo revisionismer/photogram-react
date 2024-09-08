@@ -2,6 +2,10 @@
 
 /*메인*/
 .main {
+  /* 2024-09-04 */
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+
   padding-top: 54px;
 }
 
@@ -12,6 +16,118 @@
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+
+}
+
+/* 2024-09-04 */
+
+.main .navMenu {
+    display: flex;
+    justify-content: center; 
+
+    width: 200px;
+
+    border: 1px solid rgb(219, 219, 219);
+}
+
+.main .navMenu .nav {
+    padding: 30px 0px 20px 24px;
+    min-height: 80vh;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+
+    bottom: 20vh;
+  
+}
+
+.main .navMenu .nav li {
+  margin-bottom: 25px;
+}
+
+.main .navMenu .nav .nav__menu {
+  padding-bottom: 20px;
+}
+
+.main .navMenu .nav .nav__menu a {
+  color: black;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.main .navMenu .nav .nav__menu i {
+  margin-right: 10px;
+}
+
+
+.main .navMenu .nav .nav__more {
+  width: 130px;
+  
+}
+
+.main .navMenu .nav .nav__more a {
+  color: black;
+  width: 100px;
+
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.main .navMenu .nav .nav__more .nav__more__btn {
+  margin-right: 10px;
+  cursor: pointer;
+
+  position: relative;
+  bottom: 45px;
+}
+
+.main .navMenu .nav .nav__more .nav__more__btn i {
+  margin-right: 8px;
+}
+
+/* 네브메뉴 스타일링 : 5분 41초부터 다시*/
+.main .navMenu .nav .nav__more .nav__more__dropdownMenu {
+  border: 1px solid rgb(219, 219, 219);
+ 
+  position: absolute;
+  background-color: white;
+  
+  width: 150px;
+
+
+  bottom: -500px;
+  left: 50px;
+  
+}
+
+.main .navMenu .nav .nav__more .nav__more__dropdownMenu.show {
+  position: absolute;
+  bottom: 90px;
+  transition: all 0.45s ease;
+}
+
+.main .navMenu .nav .nav__more .nav__more__dropdownMenu li {
+  margin: 10px;
+  padding : 5px;
+}
+
+.main .navMenu .nav .nav__more .nav__more__dropdownMenu li:hover {
+  background-color: #dbdbdb;
+}
+
+.main .navMenu .nav .nav__more .nav__more__dropdownMenu i {
+  margin-right: 10px;
+}
+
+.main .navMenu .nav .nav__more .nav__more__dropdownMenu .nav__menu__dropdownItem a {
+  color: black;
+}
+
+.main .container .story-area {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
 }
 
 /*게시물리스트*/

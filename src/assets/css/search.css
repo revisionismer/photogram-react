@@ -1,0 +1,107 @@
+.searchSection {
+    position: absolute;
+    
+    /* left: 200px; */
+    left: -350px;
+    padding: 25px 15px;
+
+    background-color: white;
+
+    width: 350px;
+    /* 불투명도 */
+    opacity: 0;
+}
+
+.searchSection.show {
+    position: absolute;
+    left: 200px;
+    padding: 25px 15px;
+
+    background-color: white;
+
+    width: 350px;
+
+    transition: all 0.5s ease;
+    /* 불투명도 */
+    opacity: 1;
+}
+
+.searchSection h1 {
+    font-size: 22px;
+}
+
+.searchSection form {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.searchSection input {
+    width: 100%;
+    height: 30px;
+    padding: 8px;
+    border: none;
+    background-color: rgb(239, 239, 239);
+    border-radius: 6px;
+
+    outline: none;
+}
+
+.searchSection__find .searchSection__desc {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.searchSection__find .searchSection__desc h4 {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.searchSection__find .searchSection__desc p {
+    font-size: 16px;
+    font-weight: 500;
+
+    color: rgb(0, 149, 246);
+}
+
+.searchSection__find .searchSection__cart {
+    display: flex;
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.searchSection__find .searchSection__cart .searchSection__profile {
+    display: flex;
+    align-items: center;
+}
+
+.searchSection__find .searchSection__cart .searchSection__profile .searchSection__img img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    border : 1px solid gray;
+
+    padding: 2px;
+}
+
+.searchSection__find .searchSection__cart .searchSection__profile .searchSection__info {
+    margin-left: 8px;
+}
+
+.searchSection__find .searchSection__cart .searchSection__profile .searchSection__info .searchSection__text {
+    font-size: 14px;
+    font-weight: 600;
+} 
+
+.searchSection__find .searchSection__cart .searchSection__profile .searchSection__info .searchSection__name {
+    font-size: 14px;
+    color : rgb(142, 142, 142);
+    margin-top: 4px;
+}
+
+.searchSection__find .searchSection__cart .searchSection__clear {
+    color: rgb(142, 142, 142);
+}
