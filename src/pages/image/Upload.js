@@ -92,7 +92,6 @@ const Upload = () => {
                 headers: {
                     'Authorization': 'Bearer ' + ACCESS_TOKEN,
                     'Content-Type': 'multipart/form-data'
-
                 }
             }).then(function (res) {
                 console.log(res);

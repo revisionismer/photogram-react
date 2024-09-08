@@ -640,7 +640,7 @@ const Profile = () => {
                     {/*유저정보 및 사진등록 구독하기*/}
                     <div className="profile-right">
                         <div className="name-group">
-                            <h2>{user.username}</h2>
+                            <h2>{user.name}</h2>
 
                             <div>
                                 {principalId === pageUserId ? <button className="cta" onClick={() => updateUserProfilePage()}>사진등록</button> : ''}
@@ -684,7 +684,6 @@ const Profile = () => {
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>계정</th>
                                     <th>사용자 이름</th>
                                     <th>권한</th>
                                 </tr>
@@ -694,7 +693,6 @@ const Profile = () => {
                                     return (
                                         <tr key={index} onClick={() => userInfo(user.id)}>
                                             <td>{user.id}</td>
-                                            <td>{user.username}</td>
                                             <td>{user.name}</td>
                                             <td>{user.role}</td>
                                         </tr>
@@ -725,12 +723,12 @@ const Profile = () => {
                                             <img className="subscribe-image" alt='' src={`/storyImg/${image.storyImageUrl}`} />
                                         </Link>
                                         <div className='comment'>
-                                            {image.likeState === true ? 
-                                                <Link><i className='fas fa-heart'></i>{image.totalLikeCount}</Link> 
-                                                : 
+                                            {image.likeState === true ?
+                                                <Link><i className='fas fa-heart'></i>{image.totalLikeCount}</Link>
+                                                :
                                                 <Link><i className='far fa-heart'></i>{image.totalLikeCount}</Link>
                                             }
-                                            
+
                                         </div>
                                         <p className='img-caption'>{image.caption}</p>
                                     </div>

@@ -16,7 +16,7 @@ const Header = () => {
                     <nav className="navi">
                         <ul className="navi-list">
                             <li className="navi-item">
-                                <Link to={'/'}>
+                                <Link to={'/image/story'}>
                                     <i className="fas fa-home"></i>
                                 </Link>
                             </li>

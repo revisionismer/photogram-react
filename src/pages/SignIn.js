@@ -35,29 +35,35 @@ const SignIn = () => {
                     'Content-Type': 'application/json; charset=UTF-8',
                 }
             }
-            ).then(function (res) {
-                console.log(res);
+        ).then(function (res) {
+            console.log(res);
 
-                // 1-3. response에서 가져온 값을 string으로 만들기 위해 앞에 "" 붙임
-                var responseHeader = "" + res.headers.get('authorization');
+            // 1-3. response에서 가져온 값을 string으로 만들기 위해 앞에 "" 붙임
+            var responseHeader = "" + res.headers.get('authorization');
 
-                ACCESS_TOKEN = responseHeader.substring(7);
+            ACCESS_TOKEN = responseHeader.substring(7);
 
-                console.log("엑세스 토큰 : " + ACCESS_TOKEN);
+            console.log("엑세스 토큰 : " + ACCESS_TOKEN);
 
-                navigate("/image/story");
+            navigate("/image/story");
 
-            }).catch(function (res) {
-                console.log(res);
-                if (res.response.status === 500) {
-                    alert(res.response.statusText);
-                    return;
-                }
-
-                alert(res.response.data.message);
+        }).catch(function (res) {
+            console.log(res);
+            if (res.response.status === 500) {
+                alert(res.response.statusText);
                 return;
             }
+
+            alert(res.response.data.message);
+            return;
+        }
         )
+
+    }
+
+    // 20204-09-08 : 로그인은 되는데 발급된 토큰에 포함된 정보를 리액트에서 어떻게 꺼내야 되는지 고민 해봐야함.
+    function naverLogin() {
+        window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
 
     }
 
@@ -90,7 +96,7 @@ const SignIn = () => {
 
                             {/* Oauth 소셜로그인 */}
                             <div className="login__facebook">
-                                <button type='button'>
+                                <button type='button' onClick={() => naverLogin()}>
                                     <i className="fab fa-facebook-square"></i>
                                     <span>Facebook으로 로그인</span>
                                 </button>
