@@ -10,6 +10,12 @@ import axios from 'axios';
 import Base64 from 'base-64';
 import { Link, Navigate, json, useLocation, useNavigate, useParams } from 'react-router-dom';
 
+import Search from '../popup/Search';
+import Explore from '../popup/Explore';
+import Message from '../popup/Message';
+import Notification from '../popup/Notification';
+import Reels from '../popup/Reels';
+
 
 const Story = () => {
 
@@ -197,6 +203,25 @@ const Story = () => {
             }, timeout);
         };
     }
+
+
+    useEffect(() => {
+        // 2024-09-05 : 더보기
+        const moreBtn = document.querySelector('.nav__more__btn');
+        const dropMenu = document.querySelector('.nav__more__dropdownMenu');
+
+        moreBtn.addEventListener('click', () => {
+            dropMenu.classList.toggle('show');
+        });
+
+        // 2024-09-06 : search
+        const searchSection = document.querySelector('.searchSection')
+        const searchIcon = document.querySelector('.search_icon');
+        
+        searchIcon.addEventListener('click', () => {
+            searchSection.classList.toggle('show');
+        })
+    }, [])
 
     // 2024-08-20 : 댓글 삭제 진행중
     useEffect(() => {
@@ -507,7 +532,44 @@ const Story = () => {
     return (
         <>
             <div id='main' className="main">
+           
+                <section className='navMenu'>
+                    <div className='nav'>
+                        <div className='nav__logo'></div>
+                        <div className='nav__menu'>
+                            <ul className='nav__menu__conatiner'>
+                                <li><Link to={"/image/story"}><i className="fas fa-home"></i>홈</Link></li>
+                                <li><Link className='search_icon'><i className="fas fa-search"></i>검색</Link></li>
+                                <li><Link><i className="far fa-compass"></i>탐색</Link></li>
+                                <li><Link><i className="far fa-envelope"></i>메시지</Link></li>
+                                <li><Link><i className="far fa-heart"></i>알람</Link></li>
+                                <li><Link><i className="fas fa-plus-circle"></i>글쓰기</Link></li>
+                                <li><Link><i className="fas fa-user"></i>프로필</Link></li>
+                            </ul>
+                        </div>
+                        <div className='nav__more'>
+                            
+                            <div className='nav__more__btn'>
+                                <i className='fas fa-bars'></i>
+                                더보기
+                            </div>
+
+                            <ul className='nav__more__dropdownMenu'>
+                                <li className='nav__more__li'><Link className='nav__menu__dropdownItem'><i className="fas fa-cog"></i>환경설정</Link></li>
+                                <li className='nav__more__li'><Link className='nav__menu__dropdownItem'><i className="fas fa-clock"></i>나의 활동</Link></li>
+                                <li className='nav__more__li'><Link className='nav__menu__dropdownItem'><i className="far fa-bookmark"></i>찜한 목록</Link></li>
+                                <li className='nav__more__li'><Link className='nav__menu__dropdownItem'><i className="fas fa-moon"></i>화면 색상 전환</Link></li>
+                                <li className='nav__more__li'><Link className='nav__menu__dropdownItem'><i className="far fa-bookmark"></i>에러 보고하기</Link></li>
+                                <li className='nav__more__li'><Link className='nav__menu__dropdownItem'><i className="far fa-bookmark"></i>계정 전환</Link></li>
+                                <li className='nav__more__li'><Link className='nav__menu__dropdownItem'><i className="far fa-bookmark"></i>로그 아웃</Link></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+                
                 <section className="container">
+                    
                     {/* 전체 리스트 시작 */}
                     <article className="story-list" id="storyList">
                         {/*스토리 아이템*/}
@@ -566,8 +628,19 @@ const Story = () => {
                         {/*스토리 아이템 끝*/}
 
                     </article>
+               
                 </section>
+                {/* 팝업 js */}
+                <Search/>
+                <Explore/>
+                <Message/>
+                <Notification/>
+                <Reels/>
+
             </div>
+
+            
+            
         </>
     );
 };
