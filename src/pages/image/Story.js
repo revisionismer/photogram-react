@@ -62,6 +62,8 @@ const Story = () => {
 
     const [lastIndex, setLastIndex] = useState();
 
+    const [subscribeUsers, setSubscribeUsers] = useState([]);
+
     var page = 1;
 
     function onScroll() {
@@ -221,6 +223,15 @@ const Story = () => {
         searchIcon.addEventListener('click', () => {
             searchSection.classList.toggle('show');
         })
+
+        // 2024-09-10 : Notification
+        const notificationSection = document.querySelector('.notificationSection');
+        const notificationIcon = document.querySelector('.notification_icon');
+
+        notificationIcon.addEventListener('click', () => {
+            notificationSection.classList.toggle('show');
+        })
+
     }, [])
 
     // 2024-08-20 : 댓글 삭제 진행중
@@ -526,6 +537,47 @@ const Story = () => {
 
         getStories();
 
+        if(ACCESS_TOKEN != null) {
+            
+            const getSubscribeUsers = async () => {
+                axios.get(`http://127.0.0.1:8080/api/users/s/subscribeUserList`,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json; charset=UTF-8',
+                            'Authorization': 'Bearer ' + ACCESS_TOKEN
+                        }
+                    }
+                ).then(function (res) {
+    
+                    console.log(res);
+                    setSubscribeUsers(res.data.data);
+    
+                }).catch(function (res) {
+                    console.log(res);
+    
+                    if (res.code === "ERR_NETWORK") {
+                        alert("서버와의 연결이 되어있지 않습니다.");
+                        navigate("/signin");
+                        return false;
+    
+                    }
+    
+                    if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                        // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                        alert(res.response.data.message);
+    
+                        // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                        deleteCookie('access_token');
+                        navigate("/signin");
+                        return;
+                    }
+                })
+            }
+    
+            getSubscribeUsers();
+        }
+        
+
     }, [ACCESS_TOKEN, navigate]);
 
 
@@ -542,7 +594,7 @@ const Story = () => {
                                 <li><Link className='search_icon'><i className="fas fa-search"></i>검색</Link></li>
                                 <li><Link><i className="far fa-compass"></i>탐색</Link></li>
                                 <li><Link><i className="far fa-envelope"></i>메시지</Link></li>
-                                <li><Link><i className="far fa-heart"></i>알람</Link></li>
+                                <li><Link className='notification_icon'><i className="far fa-heart"></i>알람</Link></li>
                                 <li><Link><i className="fas fa-plus-circle"></i>글쓰기</Link></li>
                                 <li><Link><i className="fas fa-user"></i>프로필</Link></li>
                             </ul>
@@ -569,65 +621,82 @@ const Story = () => {
                 </section>
                 
                 <section className="container">
-                    
-                    {/* 전체 리스트 시작 */}
-                    <article className="story-list" id="storyList">
-                        {/*스토리 아이템*/}
-                        {stories.map((story, index) => {
-                            return (
-                                <div key={index} className={`story-list__item`}>
-                                    <div className="sl__item__header">
-                                        <div>
-                                            <img className="profile-image" src={story.profileImageUrl === null ? Person : `/profileImg/${story.profileImageUrl}`} alt='' width={'100%'} height={'100%'} />
+                    <div className='main-content'>
+                        
+                        {/* 전체 리스트 시작 */}
+                        <article className="story-list" id="storyList">
+                            
+                            {/* 프로필 카루셀 */}
+                            <div className='profileCarousel'>
+                                {subscribeUsers.map( (subscribeUser, index) => {
+                                    return (
+                                        <div className='profileCarousel__img' key={index}>
+                                            <img src={subscribeUser.profileImageUrl === null ? Person : `/profileImg/${subscribeUser.profileImageUrl}`} alt='' width={'100%'} height={'100%'} />
+                                            <p>{subscribeUser.username}</p>
                                         </div>
-                                        <div>
-                                            <div>{story.username}</div>
+                                    )
+                                })}
+                            </div>
+ 
+                            {/*스토리 아이템*/}
+                            {stories.map((story, index) => {
+                                return (
+                                    <div key={index} className={`story-list__item`}>
+                                        <div className="sl__item__header">
+                                            <div>
+                                                <img className="profile-image" src={story.profileImageUrl === null ? Person : `/profileImg/${story.profileImageUrl}`} alt='' width={'100%'} height={'100%'} />
+                                            </div>
+                                            <div>
+                                                <div>{story.username}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="sl__item__img">
-                                        <img src={story.storyImageUrl === null ? Person : `/storyImg/${story.storyImageUrl}`} alt='' />
-                                    </div>
-                                    <div className="sl__item__contents">
-                                        <div className="sl__item__contents__icon">
-                                            <button>
-                                                {story.likeState === true ?
-                                                    <i className="fas fa-heart active" id={'storyLikeIcon_' + story.imageId}></i>
-                                                    :
-                                                    <i className="far fa-heart" id={'storyLikeIcon_' + story.imageId}></i>
-                                                }
-                                            </button>
+                                        <div className="sl__item__img">
+                                            <img src={story.storyImageUrl === null ? Person : `/storyImg/${story.storyImageUrl}`} alt='' />
                                         </div>
-                                        <span className="like"><b id={`storyLikeCount_${story.imageId}`}>{story.totalLikeCount}</b>likes</span>
-                                        <div className="sl__item__contents__content">
-                                            <p>{story.caption}</p>
-                                        </div>
-                                        <div id={`storyCommentList_${story.imageId}`}>
-                                            {story.comments.map((comment, index) =>
-                                                <div key={index} className="sl__item__contents__comment" id={`storyCommentItem_${comment.commentId}`}>
-                                                    <p>
-                                                        <b>{comment.username} :</b> {comment.content}
-                                                    </p>
-                                                    {story.comments[index].userId === loginUser.id ?
-                                                        <button><i id={`deleteCommentBtn_${comment.commentId}`} className="fas fa-times"></i></button>
+                                        <div className="sl__item__contents">
+                                            <div className="sl__item__contents__icon">
+                                                <button>
+                                                    {story.likeState === true ?
+                                                        <i className="fas fa-heart active" id={'storyLikeIcon_' + story.imageId}></i>
                                                         :
-                                                        ''
+                                                        <i className="far fa-heart" id={'storyLikeIcon_' + story.imageId}></i>
                                                     }
-                                                </div>
-                                            )}
+                                                </button>
+                                            </div>
+                                            <span className="like"><b id={`storyLikeCount_${story.imageId}`}>{story.totalLikeCount}</b>likes</span>
+                                            <div className="sl__item__contents__content">
+                                                <p>{story.caption}</p>
+                                            </div>
+                                            <div id={`storyCommentList_${story.imageId}`}>
+                                                {story.comments.map((comment, index) =>
+                                                    <div key={index} className="sl__item__contents__comment" id={`storyCommentItem_${comment.commentId}`}>
+                                                        <p>
+                                                            <b>{comment.username} :</b> {comment.content}
+                                                        </p>
+                                                        {story.comments[index].userId === loginUser.id ?
+                                                            <button><i id={`deleteCommentBtn_${comment.commentId}`} className="fas fa-times"></i></button>
+                                                            :
+                                                            ''
+                                                        }
+                                                    </div>
+                                                )}
 
-                                        </div>
-                                        <div className="sl__item__input">
-                                            <input type="text" placeholder="댓글 달기..." id={`storyCommentInput_${story.imageId}`} />
-                                            <button id={`commentBtn_${story.imageId}`}>게시</button>
+                                            </div>
+                                            <div className="sl__item__input">
+                                                <input type="text" placeholder="댓글 달기..." id={`storyCommentInput_${story.imageId}`} />
+                                                <button id={`commentBtn_${story.imageId}`}>게시</button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-                            );
-                        })}
-                        {/*스토리 아이템 끝*/}
-
-                    </article>
+                                );
+                            })}
+                            {/*스토리 아이템 끝*/}
+                        </article>
+                        <article className='user-list' id='userList'>
+                            <div>안녕</div>
+                        </article>
+                    
+                    </div>
                
                 </section>
                 {/* 팝업 js */}

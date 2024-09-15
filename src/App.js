@@ -44,6 +44,8 @@ function App() {
         <Route path='/user/update/*' exact={true} element={<Update />}></Route>
 
         <Route path='/image/upload' exact={true} element={<Upload />}></Route>
+
+        <Route path='/login/oauth2/code/naver?code=:code&state=:state' element={<Upload />}></Route>
       </Routes>
       <Footer />
     </div>

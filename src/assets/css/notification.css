@@ -1,0 +1,88 @@
+.notificationSection {
+    position: fixed;
+
+    /*left: 200px;*/
+    
+    left: -430px;
+    height: 100%;
+    padding: 25px 15px;
+
+    background-color: white;
+
+    width: 430px;
+    /* 불투명도 */
+    opacity: 0;
+}
+
+.notificationSection.show {
+    position: fixed;
+    
+    left: 200px;
+    height: 100%;
+    padding: 25px 15px;
+
+    background-color: white;
+
+    width: 430px;
+
+    transition: all 0.3s ease;
+    /* 불투명도 */
+    opacity: 1;
+}
+
+.notificationSection h2 {
+    font-size: 22px;
+    font-weight: 600;
+
+    margin-bottom: 24px;
+}
+
+.notificationSection__cart {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+.notificationSection__profile {
+    display: flex;
+    width: 80%;
+    align-items: center;
+}
+
+.notificationSection__profile__img {
+    padding-right: 5px;
+}
+
+.notificationSection__profile__img img {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 50%;
+
+    padding: 2px;
+    border: 1px solid gray;
+
+    
+}
+
+.notificationSection__name {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.notificationSection__before {
+    font-size: 14px;
+}
+
+.notificationSection__subscribe {
+    width: 100px;
+}
+
+.notificationSection__story img {
+    width: 50px;
+    height: 50px;
+
+    padding: 2px;
+    border: 1px solid gray;
+}
