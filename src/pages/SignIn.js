@@ -2,6 +2,7 @@ import React from 'react';
 
 import '../assets/css/style.css';
 import Logo from '../assets/images/logo.jpg';
+import NaverIcon from '../assets/images/naverIcon.png';
 
 import axios from 'axios';
 
@@ -61,9 +62,14 @@ const SignIn = () => {
 
     }
 
-    // 20204-09-08 : 로그인은 되는데 발급된 토큰에 포함된 정보를 리액트에서 어떻게 꺼내야 되는지 고민 해봐야함.
-    function naverLogin() {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
+    function goNaver() {
+
+
+        var url = "http://localhost:8080/oauth2/authorization/naver";
+
+        window.location.href = url;
+
+
 
     }
 
@@ -95,10 +101,10 @@ const SignIn = () => {
                             {/* 또는end */}
 
                             {/* Oauth 소셜로그인 */}
-                            <div className="login__facebook">
-                                <button type='button' onClick={() => naverLogin()}>
-                                    <i className="fab fa-facebook-square"></i>
-                                    <span>Facebook으로 로그인</span>
+                            <div className="login__naver">
+                                <button className='login__naver__btn' type='button' onClick={() => goNaver()} >
+                                    네이버 로그인
+                                    <img src='' alt=''></img>
                                 </button>
                             </div>
                             {/* Oauth 소셜로그인end*/}

@@ -12,11 +12,10 @@
 /*컨테이너*/
 .main .container {
   padding-top: 30px;
-  width: 935px;
+  width: 1000px;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
-
+  margin-left: 30px;
 }
 
 /* 2024-09-04 */
@@ -185,6 +184,11 @@
   border-radius: 50%;
 }
 
+.main .main-content {
+  display: flex;
+  justify-content: space-between;
+}
+
 /* 게시물 이미지 박스*/
 .main .container .story-list .story-list__item .sl__item__img {
   height: 600px;
@@ -332,7 +336,46 @@
   color: red;
 }
 
+.main .container .main-content {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+/* 2024-09-10 : 여기부터 다시*/
+.main .container .user-list {
+  margin-left: 50px;
+  width: 200px;
+  height: 300px;
+  background-color: black;
+}
+
 .profile-image {
   border: 2px solid #8a3ab8;
 }
 
+/* 2024-09-11 : 여기까지함 */
+.main .container .main-content .profileCarousel {
+  display: flex;
+  justify-content: center;
+
+  height: 100px;
+}
+
+.main .container .main-content .profileCarousel .profileCarousel__img {
+  width: 50px;
+  height: 50px;
+
+  padding: 3px;
+
+}
+
+.main .container .main-content .profileCarousel .profileCarousel__img img {
+  border-radius: 50%;
+  border: 1px solid grey;
+}
+
+.main .container .main-content .profileCarousel .profileCarousel__img p {
+  color: gray;
+  text-align: center;
+  font-size: 13px;
+}
