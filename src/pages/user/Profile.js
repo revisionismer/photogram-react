@@ -416,7 +416,7 @@ const Profile = () => {
 
         if (loginUser) {
 
-            setPricipalId(loginUser.id)
+            setPricipalId(loginUser.id);
         }
 
     }, [loginUser]);
