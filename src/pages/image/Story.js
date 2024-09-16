@@ -219,7 +219,7 @@ const Story = () => {
         // 2024-09-06 : search
         const searchSection = document.querySelector('.searchSection')
         const searchIcon = document.querySelector('.search_icon');
-        
+
         searchIcon.addEventListener('click', () => {
             searchSection.classList.toggle('show');
         })
@@ -537,8 +537,8 @@ const Story = () => {
 
         getStories();
 
-        if(ACCESS_TOKEN != null) {
-            
+        if (ACCESS_TOKEN != null) {
+
             const getSubscribeUsers = async () => {
                 axios.get(`http://127.0.0.1:8080/api/users/s/subscribeUserList`,
                     {
@@ -548,24 +548,24 @@ const Story = () => {
                         }
                     }
                 ).then(function (res) {
-    
+
                     console.log(res);
                     setSubscribeUsers(res.data.data);
-    
+
                 }).catch(function (res) {
                     console.log(res);
-    
+
                     if (res.code === "ERR_NETWORK") {
                         alert("서버와의 연결이 되어있지 않습니다.");
                         navigate("/signin");
                         return false;
-    
+
                     }
-    
+
                     if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
                         // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
                         alert(res.response.data.message);
-    
+
                         // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
                         deleteCookie('access_token');
                         navigate("/signin");
@@ -573,18 +573,53 @@ const Story = () => {
                     }
                 })
             }
-    
+
             getSubscribeUsers();
         }
-        
+
 
     }, [ACCESS_TOKEN, navigate]);
 
 
+    useEffect(() => {
+        const profileCarousel = document.querySelector(".profileCarousel");
+
+        let isDragging = false;
+        let startPosition = 0;
+        let accumulateDeltaX = 0;
+
+        function updateCarousel(deltaX) {
+
+
+        }
+
+        function handleMouseDown(e) {
+
+
+        }
+
+        function handleMouseMove(e) {
+
+
+        }
+
+        function handleMouseUp() {
+
+        }
+
+
+        profileCarousel.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+
+    }, []);
+
+
     return (
+
         <>
             <div id='main' className="main">
-           
+
                 <section className='navMenu'>
                     <div className='nav'>
                         <div className='nav__logo'></div>
@@ -600,7 +635,7 @@ const Story = () => {
                             </ul>
                         </div>
                         <div className='nav__more'>
-                            
+
                             <div className='nav__more__btn'>
                                 <i className='fas fa-bars'></i>
                                 더보기
@@ -619,16 +654,16 @@ const Story = () => {
 
                     </div>
                 </section>
-                
+
                 <section className="container">
                     <div className='main-content'>
-                        
+
                         {/* 전체 리스트 시작 */}
                         <article className="story-list" id="storyList">
-                            
+
                             {/* 프로필 카루셀 */}
                             <div className='profileCarousel'>
-                                {subscribeUsers.map( (subscribeUser, index) => {
+                                {subscribeUsers.map((subscribeUser, index) => {
                                     return (
                                         <div className='profileCarousel__img' key={index}>
                                             <img src={subscribeUser.profileImageUrl === null ? Person : `/profileImg/${subscribeUser.profileImageUrl}`} alt='' width={'100%'} height={'100%'} />
@@ -636,8 +671,9 @@ const Story = () => {
                                         </div>
                                     )
                                 })}
+
                             </div>
- 
+
                             {/*스토리 아이템*/}
                             {stories.map((story, index) => {
                                 return (
@@ -695,21 +731,21 @@ const Story = () => {
                         <article className='user-list' id='userList'>
                             <div>안녕</div>
                         </article>
-                    
+
                     </div>
-               
+
                 </section>
                 {/* 팝업 js */}
-                <Search/>
-                <Explore/>
-                <Message/>
-                <Notification/>
-                <Reels/>
+                <Search />
+                <Explore />
+                <Message />
+                <Notification />
+                <Reels />
 
             </div>
 
-            
-            
+
+
         </>
     );
 };

@@ -194,8 +194,9 @@ span {
   box-shadow: var(--shadow-1);
   background-color: #03C75A;
   color: white;
-  margin-left: 40px;
-  margin-right: 40px;
+  width: 50%;
+  margin: 0 auto;
+
 }
 
 .login__naver__btn {
@@ -210,6 +211,22 @@ span {
   height:0.9rem;
   margin-right: 0.7em;
   margin-left: 0.2em;
+}
+
+.login__google {
+  margin-top: 1px;
+}
+
+.login__google__btn {
+  width: 50%;
+  border: none;
+  outline: none;
+  background-color: inherit ;
+  color: white;
+}
+
+.login__google img {
+  width: 100%;
 }
 
 
