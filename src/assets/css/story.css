@@ -372,6 +372,11 @@
 .main .container .main-content .profileCarousel .profileCarousel__img img {
   border-radius: 50%;
   border: 1px solid grey;
+
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 
 .main .container .main-content .profileCarousel .profileCarousel__img p {
