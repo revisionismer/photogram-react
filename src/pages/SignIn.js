@@ -2,7 +2,8 @@ import React from 'react';
 
 import '../assets/css/style.css';
 import Logo from '../assets/images/logo.jpg';
-import NaverIcon from '../assets/images/naverIcon.png';
+
+import GoogleLogin from '../assets/images/google_signIn.svg';
 
 import axios from 'axios';
 
@@ -62,15 +63,17 @@ const SignIn = () => {
 
     }
 
-    function goNaver() {
-
-
+    function LoginNaver() {
         var url = "http://localhost:8080/oauth2/authorization/naver";
 
         window.location.href = url;
 
+    }
 
+    function LoginGoogle() {
+        var url = "http://localhost:8080/oauth2/authorization/google";
 
+        window.location.href = url;
     }
 
     return (
@@ -102,9 +105,15 @@ const SignIn = () => {
 
                             {/* Oauth 소셜로그인 */}
                             <div className="login__naver">
-                                <button className='login__naver__btn' type='button' onClick={() => goNaver()} >
+                                <button className='login__naver__btn' type='button' onClick={() => LoginNaver()} >
                                     네이버 로그인
                                     <img src='' alt=''></img>
+                                </button>
+                            </div>
+
+                            <div className="login__google">
+                                <button className='login__google__btn' type='button' onClick={() => LoginGoogle()} >
+                                    <img src={GoogleLogin} alt=''></img>
                                 </button>
                             </div>
                             {/* Oauth 소셜로그인end*/}
