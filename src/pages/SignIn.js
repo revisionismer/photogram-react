@@ -4,6 +4,7 @@ import '../assets/css/style.css';
 import Logo from '../assets/images/logo.jpg';
 
 import GoogleLogin from '../assets/images/google_signIn.svg';
+import FacebookLogin from '../assets/images/facebook_signIn.png';
 
 import axios from 'axios';
 
@@ -76,6 +77,12 @@ const SignIn = () => {
         window.location.href = url;
     }
 
+    function LoginFacebook() {
+        var url = "http://localhost:8080/oauth2/authorization/facebook";
+
+        window.location.href = url;
+    }
+
     return (
         <div className="container">
             <div className="loginMain">
@@ -114,6 +121,11 @@ const SignIn = () => {
                             <div className="login__google">
                                 <button className='login__google__btn' type='button' onClick={() => LoginGoogle()} >
                                     <img src={GoogleLogin} alt=''></img>
+                                </button>
+                            </div>
+                            <div className="login__facebook">
+                                <button className='login__facebook__btn' type='button' onClick={() => LoginFacebook()} >
+                                    <img src={FacebookLogin} alt=''></img>
                                 </button>
                             </div>
                             {/* Oauth 소셜로그인end*/}
