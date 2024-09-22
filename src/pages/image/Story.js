@@ -284,7 +284,6 @@ const Story = () => {
                                         return;
                                     }
                                 })
-
                         }
                     }
 
@@ -580,8 +579,10 @@ const Story = () => {
 
     }, [ACCESS_TOKEN, navigate]);
 
-
+    // 2024-09-22 : 여기까지 대략 구현
     useEffect(() => {
+        const parent = document.querySelector(".story-list");
+
         const profileCarousel = document.querySelector(".profileCarousel");
 
         let isDragging = false;
@@ -589,22 +590,69 @@ const Story = () => {
         let accumulateDeltaX = 0;
 
         function updateCarousel(deltaX) {
+            const items = document.querySelectorAll(".story-list .profileCarousel .profileCarousel__img");
+
+            accumulateDeltaX = accumulateDeltaX + deltaX;
+
+            const lastItemRightEdge = profileCarousel.offsetWidth + accumulateDeltaX;
+
+            console.log(items.length);
+
+            // 토탈 프로필 리스트 수와 프로필 섹션 크기를  곱한 값. -> 추후에 동적으로 가져와야함.
+            const totalItemWidth = items.length * items[0].offsetWidth;
+
+            if (lastItemRightEdge >= totalItemWidth && deltaX > 0) {
+                if (items.length > 8) {
+                    accumulateDeltaX = totalItemWidth + items[0].offsetWidth * 2.5 - profileCarousel.offsetWidth;
+                } else {
+                    accumulateDeltaX = 0;
+                }
+            }
+
+            if (lastItemRightEdge < profileCarousel.offsetWidth && deltaX <= 0) {
+                accumulateDeltaX = 0;
+            }
+
+
+            profileCarousel.style.transform = `translateX(${-accumulateDeltaX}px)`;
 
 
         }
 
         function handleMouseDown(e) {
+            isDragging = true;
 
+            // 마우스 클릭시 첫 위치 값
+            startPosition = e.clientX;
 
         }
 
         function handleMouseMove(e) {
+            if (!isDragging) {
+                return;
+            }
 
+            const currentPosition = e.clientX;
+
+            const deletaX = startPosition - currentPosition;
+
+            startPosition = e.clientX;
+
+            console.log("deltaX : ", deletaX);
+
+            if (deletaX > 0) {
+                // 캐러셀을 오른쪽으로 이동
+                updateCarousel(deletaX);
+            } else if (deletaX < 0) {
+                // 캐러셀을 왼쪽으로 이동
+                updateCarousel(deletaX);
+            }
 
         }
 
+        // mouseUp이라는 말은 mousedown(click) 후 마우스를 뗏다는 의미.
         function handleMouseUp() {
-
+            isDragging = false;
         }
 
 
@@ -663,6 +711,7 @@ const Story = () => {
 
                             {/* 프로필 카루셀 */}
                             <div className='profileCarousel'>
+
                                 {subscribeUsers.map((subscribeUser, index) => {
                                     return (
                                         <div className='profileCarousel__img' key={index}>
