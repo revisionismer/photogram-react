@@ -353,23 +353,29 @@
   border: 2px solid #8a3ab8;
 }
 
+.main .container .main-content .story-list {
+  overflow: hidden;
+  width: 500px;
+}
+
 /* 2024-09-11 : 여기까지함 */
 .main .container .main-content .profileCarousel {
   display: flex;
-  justify-content: center;
-
   height: 100px;
+  
 }
 
 .main .container .main-content .profileCarousel .profileCarousel__img {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
 
   padding: 3px;
 
+  margin-right: 10px;
 }
 
 .main .container .main-content .profileCarousel .profileCarousel__img img {
+  width: 60px;
   border-radius: 50%;
   border: 1px solid grey;
 
