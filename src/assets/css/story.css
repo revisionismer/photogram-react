@@ -342,11 +342,11 @@
 }
 
 /* 2024-09-10 : 여기부터 다시*/
-.main .container .user-list {
+.main .container .recommendUser {
   margin-left: 50px;
   width: 200px;
   height: 300px;
-  background-color: black;
+  
 }
 
 .profile-image {
@@ -389,4 +389,113 @@
   color: gray;
   text-align: center;
   font-size: 13px;
+}
+
+.main .container .main-content .recommendUser__myself {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  
+}
+
+.main .container .main-content .recommendUser__myself .recommendUser__myself__left {
+  display: flex;
+  align-items: center;
+
+}
+
+.main .container .main-content .recommendUser__myself .recommendUser__myself__left .recommendUser__myself__img {
+  margin-right: 8px;
+}
+
+.main .container .main-content .recommendUser__myself .recommendUser__myself__left .recommendUser__myself__img img {
+  width: 45px;
+  height: 45px;
+
+  padding: 2px;
+  border-radius: 50%;
+  border: 1px solid grey;
+}
+
+.main .container .main-content .recommendUser__myself .recommendUser__myself__left .recommendUser__myself__name {
+  font-size: 14px;
+}
+
+.main .container .main-content .recommendUser__myself .recommendUser__myself__left .recommendUser__myself__state {
+  font-size: 10px;
+  color: gray;
+}
+
+.main .container .main-content .recommendUser__myself .recommendUser__myself__right {
+  color: rgb(0, 149, 246);
+  font-size: 14px;
+}
+
+.main .container .main-content .recommendUser__friends {
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__title {
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: 12px;
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__title h4 {
+  font-size: 14px;
+  color: grey;
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__title a {
+  font-size: 14px;
+  color: black;
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__list {
+
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__left {
+  display: flex;
+  align-items: center;
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__left .recommendUser__friends__img {
+
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__left .recommendUser__friends__img img {
+  width: 45px;
+  height: 45px;
+
+  padding: 2px;
+  border-radius: 50%;
+  border: 1px solid grey;
+  margin-right: 8px;
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__left .recommendUser__friends__name {
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__left .recommendUser__friends__state {
+  font-size: 10px;
+  color: grey;
+}
+
+.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__right {
+  color: rgb(0, 149, 246);
+  font-size: 12px;
+  font-weight: 600;
 }
