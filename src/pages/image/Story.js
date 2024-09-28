@@ -553,7 +553,8 @@ const Story = () => {
 
                 }).catch(function (res) {
                     console.log(res);
-
+                // 2024-09-24 : exception이 두번 터져서 주석 처리
+                /*
                     if (res.code === "ERR_NETWORK") {
                         alert("서버와의 연결이 되어있지 않습니다.");
                         navigate("/signin");
@@ -570,6 +571,7 @@ const Story = () => {
                         navigate("/signin");
                         return;
                     }
+                */
                 })
             }
 
@@ -581,8 +583,7 @@ const Story = () => {
 
     // 2024-09-22 : 여기까지 대략 구현
     useEffect(() => {
-        const parent = document.querySelector(".story-list");
-
+     
         const profileCarousel = document.querySelector(".profileCarousel");
 
         let isDragging = false;
@@ -613,9 +614,7 @@ const Story = () => {
                 accumulateDeltaX = 0;
             }
 
-
             profileCarousel.style.transform = `translateX(${-accumulateDeltaX}px)`;
-
 
         }
 
@@ -654,7 +653,6 @@ const Story = () => {
         function handleMouseUp() {
             isDragging = false;
         }
-
 
         profileCarousel.addEventListener('mousedown', handleMouseDown);
         document.addEventListener("mousemove", handleMouseMove);
@@ -777,8 +775,61 @@ const Story = () => {
                             })}
                             {/*스토리 아이템 끝*/}
                         </article>
-                        <article className='user-list' id='userList'>
-                            <div>안녕</div>
+                        {/* 2024-09-26 : 추천인 보기(너 그리고 나) */}
+                        <article className='recommendUser' id='recommendUser'>
+                            <div className='recommendUser__myself'>
+                                <div className='recommendUser__myself__left'>
+                                    <div className='recommendUser__myself__img'>
+                                        <img src={Person} alt=''></img>
+                                    </div>
+                                    <div>
+                                        <p className='recommendUser__myself__name'>차아무개</p>
+                                        <p className='recommendUser__myself__state'>안녕하세요</p>
+                                    </div>
+                                </div>
+                                <div className='recommendUser__myself__right'>
+                                    전환
+                                </div>
+                            </div>
+                            <div className='recommendUser__friends'>
+                                
+                                <div className='recommendUser__friends__title'>
+                                    <h4>친구추천</h4>
+                                    <Link>모두보기</Link>
+                                </div>
+                                <div className='recommendUser__friends__list'>
+                                    <div className='recommendUser__friends__container'>
+                                        <div className='recommendUser__friends__left'>
+                                            <div className='recommendUser__friends__img'>
+                                                <img src={Person} alt=''></img>
+                                            </div>
+                                            <div>
+                                                <p className='recommendUser__friends__name'>김아무개</p>
+                                                <p className='recommendUser__friends__state'>헬로우</p>
+                                            </div>
+                                        </div>
+                                        <div className='recommendUser__friends__right'>
+                                            구독
+                                        </div>
+                                    </div>
+
+                                    <div className='recommendUser__friends__container'>
+                                        <div className='recommendUser__friends__left'>
+                                            <div className='recommendUser__friends__img'>
+                                                <img src={Person} alt=''></img>
+                                            </div>
+                                            <div>
+                                                <p className='recommendUser__friends__name'>장아무개</p>
+                                                <p className='recommendUser__friends__state'>하이</p>
+                                            </div>
+                                        </div>
+                                        <div className='recommendUser__friends__right'>
+                                            구독
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
                         </article>
 
                     </div>
