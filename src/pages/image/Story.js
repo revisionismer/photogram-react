@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 import Home from '../../assets/images/home.jpg';
 import Person from '../../assets/images/person.jpeg';
+import bookmark_black from '../../assets/images/bookmark_black.png';
+import bookmark_white from '../../assets/images/bookmark_white.png';
+
+import Chat from '../../assets/images/chat.png';
 
 import '../../assets/css/story.css';
 
@@ -15,7 +19,7 @@ import Explore from '../popup/Explore';
 import Message from '../popup/Message';
 import Notification from '../popup/Notification';
 import Reels from '../popup/Reels';
-
+import Comment from '../popup/Comment';
 
 const Story = () => {
 
@@ -206,7 +210,6 @@ const Story = () => {
         };
     }
 
-
     useEffect(() => {
         // 2024-09-05 : 더보기
         const moreBtn = document.querySelector('.nav__more__btn');
@@ -233,6 +236,48 @@ const Story = () => {
         })
 
     }, [])
+
+    // 2024-10-07 : 토글 작업 중
+    useEffect(() => {
+        const parent = document.querySelector('#storyList');
+        const commentSection = document.querySelector('.commentSection');
+        const closeModal = document.querySelector('.closeModal');
+        const dim = document.querySelector('.dim');
+
+        if (parent !== null) {
+            parent.addEventListener('click', (e) => {
+
+                const chatBtnId = e.target.id.slice(9);
+
+                if (chatBtnId) {  // 2024-10-09 : chatBtnId 값이 있을때
+
+                    // 2024-10-06 : 토글시 해당 스토리 근처에서 모달창이 뜨게끔 해줘야함
+                    commentSection.style.top = `40%`;
+                    commentSection.style.left = `50%`;
+
+                    commentSection.classList.toggle('show');
+
+                    dim.classList.toggle('show');
+                }
+
+            })
+
+            // 2024-10-08 : dim 처리까지 완료
+            closeModal.addEventListener('click', (e) => {
+                commentSection.classList.remove('show');
+                dim.classList.remove('show');
+            })
+
+            // 2024-10-09 : dim을 클릭해도 댓글 창이 사라지게 구현
+            dim.addEventListener('click', (e) => {
+                commentSection.classList.remove('show');
+                dim.classList.remove('show');
+            });
+
+
+        }
+
+    })
 
     // 2024-08-20 : 댓글 삭제 진행중
     useEffect(() => {
@@ -553,25 +598,25 @@ const Story = () => {
 
                 }).catch(function (res) {
                     console.log(res);
-                // 2024-09-24 : exception이 두번 터져서 주석 처리
-                /*
-                    if (res.code === "ERR_NETWORK") {
-                        alert("서버와의 연결이 되어있지 않습니다.");
-                        navigate("/signin");
-                        return false;
-
-                    }
-
-                    if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
-                        // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
-                        alert(res.response.data.message);
-
-                        // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
-                        deleteCookie('access_token');
-                        navigate("/signin");
-                        return;
-                    }
-                */
+                    // 2024-09-24 : exception이 두번 터져서 주석 처리
+                    /*
+                        if (res.code === "ERR_NETWORK") {
+                            alert("서버와의 연결이 되어있지 않습니다.");
+                            navigate("/signin");
+                            return false;
+    
+                        }
+    
+                        if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                            // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                            alert(res.response.data.message);
+    
+                            // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                            deleteCookie('access_token');
+                            navigate("/signin");
+                            return;
+                        }
+                    */
                 })
             }
 
@@ -583,7 +628,7 @@ const Story = () => {
 
     // 2024-09-22 : 여기까지 대략 구현
     useEffect(() => {
-     
+
         const profileCarousel = document.querySelector(".profileCarousel");
 
         let isDragging = false;
@@ -738,11 +783,24 @@ const Story = () => {
                                         </div>
                                         <div className="sl__item__contents">
                                             <div className="sl__item__contents__icon">
-                                                <button>
-                                                    {story.likeState === true ?
-                                                        <i className="fas fa-heart active" id={'storyLikeIcon_' + story.imageId}></i>
+                                                <div style={{ display: 'flex' }}>
+                                                    <button>
+                                                        {story.likeState === true ?
+                                                            <i className="fas fa-heart active" id={'storyLikeIcon_' + story.imageId}></i>
+                                                            :
+                                                            <i className="far fa-heart" id={'storyLikeIcon_' + story.imageId}></i>
+                                                        }
+                                                    </button>
+                                                    <button>
+                                                        <img id={`chatIcon_${story.imageId}`} className='chatImgIcon' src={Chat} alt='' width={25} height={25.6} ></img>
+                                                    </button>
+                                                </div>
+                                                <button id={'storyBookmarkIcon_' + story.imageId}>
+                                                    {/** 나중에 조건식 수정 */}
+                                                    {true === true ?
+                                                        <img src={bookmark_white} alt='' width={25} height={25}></img>
                                                         :
-                                                        <i className="far fa-heart" id={'storyLikeIcon_' + story.imageId}></i>
+                                                        <img src={bookmark_black} alt='' width={25} height={25}></img>
                                                     }
                                                 </button>
                                             </div>
@@ -792,7 +850,7 @@ const Story = () => {
                                 </div>
                             </div>
                             <div className='recommendUser__friends'>
-                                
+
                                 <div className='recommendUser__friends__title'>
                                     <h4>친구추천</h4>
                                     <Link>모두보기</Link>
@@ -828,7 +886,7 @@ const Story = () => {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </article>
 
@@ -841,6 +899,7 @@ const Story = () => {
                 <Message />
                 <Notification />
                 <Reels />
+                <Comment />
 
             </div>
 
