@@ -216,7 +216,10 @@
   .sl__item__contents
   .sl__item__contents__icon {
   height: 40px;
-  padding: 5px 0;      
+  padding: 5px 0;     
+  
+  display: flex;
+  justify-content: space-between; 
 }
 
 /*좋아요 실제 버튼*/
