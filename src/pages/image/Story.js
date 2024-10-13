@@ -4,6 +4,7 @@ import Home from '../../assets/images/home.jpg';
 import Person from '../../assets/images/person.jpeg';
 import bookmark_black from '../../assets/images/bookmark_black.png';
 import bookmark_white from '../../assets/images/bookmark_white.png';
+import ShareIcon from '../../assets/images/message.png';
 
 import Chat from '../../assets/images/chat.png';
 
@@ -20,6 +21,7 @@ import Message from '../popup/Message';
 import Notification from '../popup/Notification';
 import Reels from '../popup/Reels';
 import Comment from '../popup/Comment';
+import Share from '../popup/Share';
 
 const Story = () => {
 
@@ -237,11 +239,49 @@ const Story = () => {
 
     }, [])
 
+    useEffect(() => {
+        const parent = document.querySelector('#storyList');
+        const shareSection = document.querySelector('.shareSection');
+        const closeModal = document.querySelector('.closeShareModal');
+        const dim = document.querySelector('.dim');
+
+        if (parent !== null) {
+            parent.addEventListener('click', (e) => {
+
+                const shareBtnId = e.target.id.slice(15);
+
+                console.log(shareBtnId)
+
+                if (Number(shareBtnId)) {
+
+                    shareSection.style.top = `50%`;
+                    shareSection.style.left = `40%`;
+
+                    shareSection.classList.toggle('show');
+
+                    dim.classList.toggle('show');
+
+                }
+
+            })
+
+            closeModal.addEventListener('click', (e) => {
+                shareSection.classList.remove('show');
+                dim.classList.remove('show');
+            })
+
+            dim.addEventListener('click', (e) => {
+                shareSection.classList.remove('show');
+                dim.classList.remove('show');
+            });
+        }
+    }, [])
+
     // 2024-10-07 : 토글 작업 중
     useEffect(() => {
         const parent = document.querySelector('#storyList');
         const commentSection = document.querySelector('.commentSection');
-        const closeModal = document.querySelector('.closeModal');
+        const closeModal = document.querySelector('.closeCommentModal');
         const dim = document.querySelector('.dim');
 
         if (parent !== null) {
@@ -249,7 +289,7 @@ const Story = () => {
 
                 const chatBtnId = e.target.id.slice(9);
 
-                if (chatBtnId) {  // 2024-10-09 : chatBtnId 값이 있을때
+                if (Number(chatBtnId)) {  // 2024-10-09 : chatBtnId 값이 있을때
 
                     // 2024-10-06 : 토글시 해당 스토리 근처에서 모달창이 뜨게끔 해줘야함
                     commentSection.style.top = `40%`;
@@ -277,7 +317,7 @@ const Story = () => {
 
         }
 
-    })
+    }, [])
 
     // 2024-08-20 : 댓글 삭제 진행중
     useEffect(() => {
@@ -794,6 +834,8 @@ const Story = () => {
                                                     <button>
                                                         <img id={`chatIcon_${story.imageId}`} className='chatImgIcon' src={Chat} alt='' width={25} height={25.6} ></img>
                                                     </button>
+
+                                                    <button><img id={`storyShareIcon_${story.imageId}`} className='shareImgIcon' src={ShareIcon} alt='' width={25} height={25}></img></button>
                                                 </div>
                                                 <button id={'storyBookmarkIcon_' + story.imageId}>
                                                     {/** 나중에 조건식 수정 */}
@@ -803,6 +845,7 @@ const Story = () => {
                                                         <img src={bookmark_black} alt='' width={25} height={25}></img>
                                                     }
                                                 </button>
+
                                             </div>
                                             <span className="like"><b id={`storyLikeCount_${story.imageId}`}>{story.totalLikeCount}</b>likes</span>
                                             <div className="sl__item__contents__content">
@@ -900,7 +943,7 @@ const Story = () => {
                 <Notification />
                 <Reels />
                 <Comment />
-
+                <Share />
             </div>
 
 
