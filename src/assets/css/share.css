@@ -1,0 +1,209 @@
+.shareSection {
+    position: fixed;
+/* 
+    top: 50%;
+    left: 40%;
+*/
+    left: -350px;
+    padding: 15px 15px;
+
+    background-color: white;
+
+    width: 350px;
+    /* 불투명도 */
+    opacity: 0;
+}
+
+.shareSection.show {
+    position: fixed;
+    
+    top: 50%;
+    left: 40%;
+    /* left: -350px; */
+    padding: 15px 15px;
+
+    background-color: white;
+
+    width: 350px;
+
+    opacity: 1;
+    transition: all 0.3s ease;
+    z-index: 11;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent 
+.shareSection__modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent 
+.shareSection__modalHeader h1 {
+    font-size: 18px;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent 
+.shareSection__modalHeader button {
+    border: none;
+    outline: none;
+    background: #fff;
+    cursor: pointer;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent 
+.shareSection__modalHeader .closeModal {
+    font-size: 18px;
+    opacity: 0.5;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent 
+.shareSection__modalHeader .closeModal:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody {
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    margin: 14px 0px;
+    padding: 8px 0px;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody
+.shareSection__modalBody__search {
+    display: flex;
+    align-items: baseline;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody
+.shareSection__modalBody__search p {
+    margin-right: 8px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody
+.shareSection__modalBody__search input {
+    width: 100%;
+    border: none;
+    padding: 5px 10px;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody
+.shareSection__modalBody__recommendationList {
+    font-size: 16px;
+    font-weight: 800;
+
+    margin-bottom: 12px;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody
+.shareSection__modalBody__people
+.shareSection__modalBody__person {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody
+.shareSection__modalBody__people
+.shareSection__modalBody__person:last-child {
+    margin-bottom: 0px;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody
+.shareSection__modalBody__people
+.shareSection__modalBody__person
+.shareSection__modalBody__person__left {
+    margin-right: 16px;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody
+.shareSection__modalBody__people
+.shareSection__modalBody__person
+.shareSection__modalBody__person__left img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody
+.shareSection__modalBody__people
+.shareSection__modalBody__person
+.shareSection__modalBody__person__right p:first-child {
+    font-size: 16px;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalBody
+.shareSection__modalBody__people
+.shareSection__modalBody__person
+.shareSection__modalBody__person__right p:nth-child(2) {
+    font-size: 14px;
+    color: grey;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalFooter button {
+    width: 100%;
+    border-radius: 8px;
+    border: none;
+    padding: 8px 0px;
+    font-size: 16px;
+    background-color: blueviolet;
+    color: white;
+    opacity: 0.5;
+}
+
+.shareSection 
+.shareSection__modalDialog 
+.shareSection__modalContent
+.shareSection__modalFooter button:hover {
+    cursor: pointer;
+    opacity: 1;
+}
