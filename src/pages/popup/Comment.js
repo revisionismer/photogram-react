@@ -11,7 +11,7 @@ const Comment = () => {
                 <div className="commentSection__modalContent">
                     <div className='commentSection__modalHeader'>
                         <h1>댓글</h1>
-                        <button className='closeModal'><i className='fas fa-times'></i></button>
+                        <button className='closeCommentModal'><i className='fas fa-times'></i></button>
                     </div>
                     <div className='commentSection__modalBody'>
                         <div className='commentSection__comments'>
