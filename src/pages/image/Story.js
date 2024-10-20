@@ -22,6 +22,7 @@ import Notification from '../popup/Notification';
 import Reels from '../popup/Reels';
 import Comment from '../popup/Comment';
 import Share from '../popup/Share';
+import WriteStory from '../popup/WriteStory';
 
 const Story = () => {
 
@@ -212,6 +213,8 @@ const Story = () => {
         };
     }
 
+    let extraImgUrl;
+
     useEffect(() => {
         // 2024-09-05 : 더보기
         const moreBtn = document.querySelector('.nav__more__btn');
@@ -239,6 +242,143 @@ const Story = () => {
 
     }, [])
 
+    // 2024-10-17 : 여기까지
+    useEffect(() => {
+        const form = document.querySelector('.writeStorySection__uploadBtn__form');
+        const uploadImgArea = document.querySelector('.writeStorySection__uploadImgArea');
+        const imgArea = document.querySelector('.writeStorySection__imgArea');
+
+        const imgInput = document.querySelector('.writeStorySection__uploadImg__input');
+
+        const modalHeaderH1 = document.querySelector('.writeStorySection__modalHeader__h1');
+
+        const modalNextBtn = document.querySelector('.writeStorySection__modalHeader__btn .nextModalBtn');
+
+        form.addEventListener('change', (e) => {
+            e.preventDefault();
+
+            uploadImgArea.style.display = "block";
+            imgArea.style.display = "none";
+
+            const imgFile = imgInput.files[0];
+            /*
+                        // 1.
+                        let reader = new FileReader();
+            
+                        reader.onload = (e) => {
+                            const uploadImg = document.querySelector('.writeStorySection__uploadImgArea__img');
+                            uploadImg.src = e.target.result;
+                        }
+            
+                        reader.readAsDataURL(imgFile);  // 1-3. 이 코드 실행시 reader.onload 실행
+            */
+
+            // 2. 
+            // 2024-10-18 : 여기까지
+            const imgUrl = URL.createObjectURL(imgFile);
+
+            console.log(imgUrl);
+
+            const uploadImg = document.querySelector('.writeStorySection__uploadImgArea__img');
+            uploadImg.src = imgUrl;
+
+            modalHeaderH1.textContent = '자르기';
+            modalNextBtn.style.display = 'inline-block';
+
+            extraImgUrl = imgUrl;
+
+        })
+    }, [])
+
+    useEffect(() => {
+        const parent = document.querySelector('#storyList');
+        const writeStorySection = document.querySelector('.writeStorySection');
+        const writeStoryIcon = document.querySelector('.writeStory_icon');
+        const closeModal = document.querySelector('.closeWriteStoryModal');
+        const dim = document.querySelector('.dim');
+
+        const imgArea = document.querySelector('.writeStorySection__imgArea');
+        const uploadImgArea = document.querySelector('.writeStorySection__uploadImgArea');
+        const uploadedImg = document.querySelector('.writeStorySection__uploadImgArea__img');
+        const modalHeaderH1 = document.querySelector('.writeStorySection__modalHeader__h1');
+        const modalNextBtn = document.querySelector('.writeStorySection__modalHeader__btn .nextModalBtn');
+        const modalShareBtn = document.querySelector('.writeStorySection__modalHeader__btn .shareModalBtn');
+
+        const uploadImgDescription = document.querySelector('.writeStorySection__uploadImgDescription');
+        const lastShare = document.querySelector('.writeStorySection__share');
+
+        if (parent !== null) {
+            writeStoryIcon.addEventListener('click', () => {
+                writeStorySection.classList.toggle('show');
+                dim.classList.toggle('show');
+
+            });
+
+            closeModal.addEventListener('click', (e) => {
+
+                e.preventDefault();
+
+                writeStorySection.classList.remove('show');
+                dim.classList.remove('show');
+                imgArea.style.display = "block";
+                uploadImgArea.style.display = "none";
+                modalHeaderH1.textContent = '게시글 작성하기';
+                modalNextBtn.style.display = "none";
+                modalShareBtn.style.display = "none";
+                uploadImgDescription.style.display = 'none';
+
+                uploadedImg.src = '';
+
+                lastShare.style.display = 'none';
+
+                lastShare.textContent = '';
+
+            });
+
+            dim.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                writeStorySection.classList.remove('show');
+                dim.classList.remove('show');
+                imgArea.style.display = "block";
+                uploadImgArea.style.display = "none";
+                modalHeaderH1.textContent = '게시글 작성하기';
+                modalNextBtn.style.display = "none";
+                modalShareBtn.style.display = "none";
+
+                uploadedImg.src = '';
+
+                lastShare.style.display = 'none';
+
+                lastShare.textContent = '';
+            });
+
+            modalNextBtn.addEventListener('click', (e) => {
+                modalHeaderH1.textContent = '게시글 생성하기';
+                modalNextBtn.style.display = 'none';
+                modalShareBtn.style.display = 'inline-block';
+                uploadImgDescription.style.display = 'grid';
+
+                const lastImg = document.querySelector('.writeStorySection__uploadImgDescription__img');
+
+                lastImg.src = extraImgUrl;
+            });
+
+            modalShareBtn.addEventListener('click', (e) => {
+                modalShareBtn.style.display = 'none';
+                uploadImgDescription.style.display = 'none';
+                uploadImgArea.style.display = 'none';
+
+
+                lastShare.style.display = 'flex';
+
+                lastShare.textContent = '공유되었습니다.';
+            });
+
+        }
+
+    }, [])
+
     useEffect(() => {
         const parent = document.querySelector('#storyList');
         const shareSection = document.querySelector('.shareSection');
@@ -249,8 +389,6 @@ const Story = () => {
             parent.addEventListener('click', (e) => {
 
                 const shareBtnId = e.target.id.slice(15);
-
-                console.log(shareBtnId)
 
                 if (Number(shareBtnId)) {
 
@@ -276,6 +414,7 @@ const Story = () => {
             });
         }
     }, [])
+
 
     // 2024-10-07 : 토글 작업 중
     useEffect(() => {
@@ -318,6 +457,7 @@ const Story = () => {
         }
 
     }, [])
+
 
     // 2024-08-20 : 댓글 삭제 진행중
     useEffect(() => {
@@ -761,7 +901,7 @@ const Story = () => {
                                 <li><Link><i className="far fa-compass"></i>탐색</Link></li>
                                 <li><Link><i className="far fa-envelope"></i>메시지</Link></li>
                                 <li><Link className='notification_icon'><i className="far fa-heart"></i>알람</Link></li>
-                                <li><Link><i className="fas fa-plus-circle"></i>글쓰기</Link></li>
+                                <li><Link className='writeStory_icon'><i className="fas fa-plus-circle"></i>글쓰기</Link></li>
                                 <li><Link><i className="fas fa-user"></i>프로필</Link></li>
                             </ul>
                         </div>
@@ -944,6 +1084,7 @@ const Story = () => {
                 <Reels />
                 <Comment />
                 <Share />
+                <WriteStory />
             </div>
 
 

@@ -25,6 +25,8 @@
 
     width: 430px;
 
+    z-index: 11;
+
     transition: all 0.3s ease;
     /* 불투명도 */
     opacity: 1;
