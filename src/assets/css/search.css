@@ -22,6 +22,8 @@
     width: 350px;
 
     transition: all 0.3s ease;
+
+    z-index: 11;
     /* 불투명도 */
     opacity: 1;
 }
