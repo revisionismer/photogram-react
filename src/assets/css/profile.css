@@ -429,8 +429,8 @@
 #user-list {
   display: flex;
   width: 400px;
-  padding-left: 10px;
-  padding-top: 100px;
+  /* padding-left: 10px;
+  padding-top: 100px; */
 }
 
 table {

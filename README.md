@@ -18,3 +18,4 @@
 16. 친구추천 마크업 및 동작 구현
 17. 댓글(comment) 모달 동작 및 댓글창 open시 dim 처리 구현
 18. 공유(share) 모달 동작 및 공유창 open시 dim 처리 구현
+19. 글쓰기(writeStory) 모달 동작 및 글쓰기창 open시 dim 처리 구현
