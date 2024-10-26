@@ -23,6 +23,7 @@ import Reels from '../popup/Reels';
 import Comment from '../popup/Comment';
 import Share from '../popup/Share';
 import WriteStory from '../popup/WriteStory';
+import NavBottom from '../popup/NavBottom';
 
 const Story = () => {
 
@@ -261,17 +262,17 @@ const Story = () => {
             imgArea.style.display = "none";
 
             const imgFile = imgInput.files[0];
-            /*
-                        // 1.
-                        let reader = new FileReader();
+        /*
+            // 1.
+            let reader = new FileReader();
             
-                        reader.onload = (e) => {
-                            const uploadImg = document.querySelector('.writeStorySection__uploadImgArea__img');
-                            uploadImg.src = e.target.result;
-                        }
+            reader.onload = (e) => {
+                const uploadImg = document.querySelector('.writeStorySection__uploadImgArea__img');
+                uploadImg.src = e.target.result;
+            }
             
-                        reader.readAsDataURL(imgFile);  // 1-3. 이 코드 실행시 reader.onload 실행
-            */
+            reader.readAsDataURL(imgFile);  // 1-3. 이 코드 실행시 reader.onload 실행
+        */
 
             // 2. 
             // 2024-10-18 : 여기까지
@@ -368,8 +369,7 @@ const Story = () => {
                 modalShareBtn.style.display = 'none';
                 uploadImgDescription.style.display = 'none';
                 uploadImgArea.style.display = 'none';
-
-
+                
                 lastShare.style.display = 'flex';
 
                 lastShare.textContent = '공유되었습니다.';
@@ -1085,6 +1085,9 @@ const Story = () => {
                 <Comment />
                 <Share />
                 <WriteStory />
+
+                {/** nav_bottom js */}
+                <NavBottom/>
             </div>
 
 

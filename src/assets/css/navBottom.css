@@ -1,0 +1,41 @@
+.nav__bottom {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+
+    display: none;
+    justify-content: space-around;
+    padding: 5px;
+    z-index: 10;
+
+    background-color: white;
+
+}
+
+.nav__bottom a {
+    color: black;
+}
+
+@media screen and (max-width : 498px) {
+  
+   
+}
+  
+/* 미디어 쿼리(반응형) :  */
+@media screen and (min-width : 498px) and (max-width : 768px) {
+    .nav__bottom {
+        display: flex;
+    }
+        
+}
+  
+/* 미디어 쿼리(반응형) :  */
+@media screen and (min-width : 768px) and (max-width : 992px) {
+    
+    
+}
+  
+/* 미디어 쿼리(반응형) :  */
+@media screen and (min-width : 992px) {
+    
+}
