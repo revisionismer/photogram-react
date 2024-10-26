@@ -10,6 +10,8 @@
     background-color: white;
 
     width: 430px;
+    height: 100vh;
+
     /* 불투명도 */
     opacity: 0;
 }
@@ -24,6 +26,7 @@
     background-color: white;
 
     width: 430px;
+    height: 100vh;
 
     z-index: 11;
 

@@ -79,7 +79,7 @@
   cursor: pointer;
 
   position: relative;
-  bottom: 45px;
+
 }
 
 .main .navMenu .nav .nav__more .nav__more__btn i {
@@ -341,7 +341,7 @@
 
 .main .container .main-content {
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 2fr 1fr;
 }
 
 /* 2024-09-10 : 여기부터 다시*/
@@ -501,4 +501,62 @@
   color: rgb(0, 149, 246);
   font-size: 12px;
   font-weight: 600;
+}
+
+/* 미디어 쿼리(반응형) : */
+@media screen and (max-width : 498px) {
+  .recommendUser {
+    display: none;
+  }
+
+  .main .navMenu {
+    display: none;
+  }
+
+  .main .container {
+    width: 100%;
+    margin-left: 70px
+    
+  }
+
+}
+
+/* 미디어 쿼리(반응형) :  */
+@media screen and (min-width : 498px) and (max-width : 767px) {
+.recommendUser {
+    display: none;
+  }
+
+  .main .navMenu {
+    display: none;
+  }
+
+  .main .container {
+    width: 100%;
+    margin-left: 70px
+    
+  }
+
+  .main .container .main-content {
+    grid-template-columns: 1fr;
+  
+  }
+
+  .footer {
+    display: none;
+  }
+
+  
+}
+
+/* 미디어 쿼리(반응형) :  */
+@media screen and (min-width : 768px) and (max-width : 992px) {
+  .recommendUser {
+    display: none;
+  }
+
+}
+/* 미디어 쿼리(반응형) :  */
+@media screen and (min-width : 992px) {
+  
 }
