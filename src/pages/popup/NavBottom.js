@@ -5,14 +5,6 @@ import '../../assets/css/navBottom.css';
 
 const NavBottom = () => {
 
-    useEffect(() => {
-        const homeIcon = document.querySelector('.home_icon');
-
-        homeIcon.addEventListener('click', () => {
-            console.log("home");
-        })
-    });
-    
     return (
         <div className='nav__bottom'>
             <li><Link className='home_icon' to={"/image/story"}><i className="fas fa-home"></i></Link></li>
