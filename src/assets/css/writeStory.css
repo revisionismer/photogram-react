@@ -23,6 +23,23 @@
     
     top: 30%;
     left: 40%;
+    
+    /* left: -350px; */
+    padding: 15px 15px;
+
+    background-color: white;
+
+    width: 450px;
+
+    opacity: 1;
+    z-index: 11;
+}
+
+.writeStorySection.m_show {
+    position: fixed;
+    
+    top: 30%;
+    left: 22%;
     /* left: -350px; */
     padding: 15px 15px;
 

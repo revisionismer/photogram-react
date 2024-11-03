@@ -262,17 +262,17 @@ const Story = () => {
             imgArea.style.display = "none";
 
             const imgFile = imgInput.files[0];
-        /*
-            // 1.
-            let reader = new FileReader();
-            
-            reader.onload = (e) => {
-                const uploadImg = document.querySelector('.writeStorySection__uploadImgArea__img');
-                uploadImg.src = e.target.result;
-            }
-            
-            reader.readAsDataURL(imgFile);  // 1-3. 이 코드 실행시 reader.onload 실행
-        */
+            /*
+                // 1.
+                let reader = new FileReader();
+                
+                reader.onload = (e) => {
+                    const uploadImg = document.querySelector('.writeStorySection__uploadImgArea__img');
+                    uploadImg.src = e.target.result;
+                }
+                
+                reader.readAsDataURL(imgFile);  // 1-3. 이 코드 실행시 reader.onload 실행
+            */
 
             // 2. 
             // 2024-10-18 : 여기까지
@@ -369,13 +369,45 @@ const Story = () => {
                 modalShareBtn.style.display = 'none';
                 uploadImgDescription.style.display = 'none';
                 uploadImgArea.style.display = 'none';
-                
+
                 lastShare.style.display = 'flex';
 
                 lastShare.textContent = '공유되었습니다.';
             });
 
         }
+
+    }, [])
+
+    useEffect(() => {
+        const writeStorySection = document.querySelector('.writeStorySection');
+        const closeModal = document.querySelector('.closeWriteStoryModal');
+        const dim = document.querySelector('.dim');
+
+        const writeStory_icon = document.querySelector('.nav__bottom .writeStory_icon');
+
+        writeStory_icon.addEventListener('click', () => {
+
+            writeStorySection.classList.toggle('show');
+
+            const writeStorySection_show = document.querySelector('.writeStorySection.show');
+
+            writeStorySection_show.style.left = '22%';
+
+            dim.classList.toggle('show');
+        })
+
+        closeModal.addEventListener('click', (e) => {
+            e.preventDefault();
+            writeStorySection.classList.remove('show');
+            dim.classList.remove('show');
+        })
+
+        dim.addEventListener('click', (e) => {
+            e.preventDefault();
+            writeStorySection.classList.remove('show');
+            dim.classList.remove('show');
+        })
 
     }, [])
 
@@ -1087,7 +1119,7 @@ const Story = () => {
                 <WriteStory />
 
                 {/** nav_bottom js */}
-                <NavBottom/>
+                <NavBottom />
             </div>
 
 
