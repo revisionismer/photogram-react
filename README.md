@@ -20,4 +20,4 @@
 18. 공유(share) 모달 동작 및 공유창 open시 dim 처리 구현
 19. 글쓰기(writeStory) 모달 동작 및 글쓰기창 open시 dim 처리 구현
 20. navBottom 만들고 반응형 작업
-21. navBottom 글쓰기 모달 동작 및 글스기창 open시 dim 처리 구현
+21. navBottom 글쓰기 모달 동작 및 글쓰기창 open시 dim 처리 구현
