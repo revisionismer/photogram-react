@@ -141,14 +141,22 @@ const Update = () => {
         }).catch(function (res) {
             console.log(res);
             if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
-               
-                alert(res.response.data.message);
                 
                 if(res.response.data.message === '비밀번호가 일치하지 않습니다.') {
+                    alert(res.response.data.message);
+
                     document.getElementById('password').focus();
                     document.getElementById('password').value = '';
                     return false;
                 } 
+
+                // 2024-11-13 : 유효성 검사 체크 안된 부분 추가
+                if(res.response.data.errors[0].defaultMessage  === '이름은 공백일 수 없습니다.') {
+                    alert(res.response.data.errors[0].defaultMessage);
+
+                    document.getElementById('name').focus();
+                    return false;
+                }
 
                 deleteCookie('access_token');
                 navigate("/signin");
