@@ -245,7 +245,7 @@ const Profile = () => {
                 } else {
                     item += `
                             <div class="subscribe__btn">
-                                <button id="cancel_subscribe_${user[i].userId}" class="cta blue">구독취소</button>
+                                <button id="cancel_subscribe_${user[i].id}" class="cta blue">구독취소</button>
                             </div> 
                         </div>
                     `;

@@ -72,6 +72,10 @@ const Story = () => {
 
     const [subscribeUsers, setSubscribeUsers] = useState([]);
 
+    const [subscribeUsersCount, setSubscribeUsersCount] = useState([]);
+
+    const [recommendUsers, setRecommendUsers] = useState([]);
+
     var page = 1;
 
     function onScroll() {
@@ -597,7 +601,7 @@ const Story = () => {
 
                             let content =
                                 `<p>` +
-                                `<b>${comment.username} :</b> ${comment.content}` +
+                                `<b>${comment.username.length > 10 ? comment.username.slice(0, 10) + '...' : comment.username} :</b> ${comment.content}` +
                                 `</p>` +
                                 `<button><i id="deleteCommentBtn_${comment.commentId}" class="fas fa-times"></i></button>`;
 
@@ -742,10 +746,12 @@ const Story = () => {
 
 
     useEffect(() => {
-        window.addEventListener('scroll', onScroll);
+        if(subscribeUsersCount > 0) {
+            window.addEventListener('scroll', onScroll);
 
-        return () => {
-            window.removeEventListener('scroll', onScroll);
+            return () => {
+                window.removeEventListener('scroll', onScroll);
+            }
         }
     });
 
@@ -807,6 +813,7 @@ const Story = () => {
 
                     console.log(res);
                     setSubscribeUsers(res.data.data);
+                    setSubscribeUsersCount(res.data.data.length);
 
                 }).catch(function (res) {
                     console.log(res);
@@ -842,6 +849,8 @@ const Story = () => {
     useEffect(() => {
 
         const profileCarousel = document.querySelector(".profileCarousel");
+
+        if (!profileCarousel) return;
 
         let isDragging = false;
         let startPosition = 0;
@@ -917,6 +926,47 @@ const Story = () => {
 
     }, []);
 
+    useEffect(() => {
+
+        const url = `http://127.0.0.1:8080/api/users/s/recommendUserList`;
+
+        const getRecommendUserList = async () => {
+            axios.get(url,
+                {
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'Authorization': 'Bearer ' + ACCESS_TOKEN
+                    }
+                }
+            ).then(function (res) {
+                console.log(res);
+                setRecommendUsers(res.data.data)
+
+            }).catch(function (res) {
+                console.log(res);
+
+                if (res.code === "ERR_NETWORK") {
+                    alert("서버와의 연결이 되어있지 않습니다.");
+                    navigate("/signin");
+                    return false;
+
+                }
+
+                if (res.response.status === 400 || res.response.status === 401 || res.response.status === 403) {
+                    // 2024-03-28 : alert가 두번씩 호출됨 고민해봐야함 : index.js에서 문제됨
+                    alert(res.response.data.message);
+
+                    // 2024-04-12 : 무슨 이유인지 GET 방식에서는 403일때 서버에서 쿠키 삭제가 안되어 클라이언트 단에서 직접 삭제
+                    deleteCookie('access_token');
+                    navigate("/signin");
+                    return;
+                }
+            })
+        }
+        getRecommendUserList();
+    
+    }, []);
+
 
     return (
 
@@ -959,25 +1009,29 @@ const Story = () => {
                 </section>
 
                 <section className="container">
+                    
                     <div className='main-content'>
 
                         {/* 전체 리스트 시작 */}
                         <article className="story-list" id="storyList">
 
-                            {/* 프로필 카루셀 */}
+                            {/* 프로필 카루셀 */}    
+                            {subscribeUsersCount > 0 && 
                             <div className='profileCarousel'>
 
                                 {subscribeUsers.map((subscribeUser, index) => {
                                     return (
+                                        
                                         <div className='profileCarousel__img' key={index}>
                                             <img src={subscribeUser.profileImageUrl === null ? Person : `/profileImg/${subscribeUser.profileImageUrl}`} alt='' width={'100%'} height={'100%'} />
-                                            <p>{subscribeUser.username}</p>
+                                            <p>{subscribeUser?.username?.length > 10 ? `${subscribeUser.username.slice(0, 10)}...` : subscribeUser?.username}</p>
+                                           
                                         </div>
                                     )
                                 })}
 
                             </div>
-
+                            }  
                             {/*스토리 아이템*/}
                             {stories.map((story, index) => {
                                 return (
@@ -1027,7 +1081,7 @@ const Story = () => {
                                                 {story.comments.map((comment, index) =>
                                                     <div key={index} className="sl__item__contents__comment" id={`storyCommentItem_${comment.commentId}`}>
                                                         <p>
-                                                            <b>{comment.username} :</b> {comment.content}
+                                                            <b>{comment.username.length > 10 ? comment.username.slice(0, 10) + '...' : comment.username} :</b> {comment.content}
                                                         </p>
                                                         {story.comments[index].userId === loginUser.id ?
                                                             <button><i id={`deleteCommentBtn_${comment.commentId}`} className="fas fa-times"></i></button>
@@ -1071,36 +1125,32 @@ const Story = () => {
                                     <Link>모두보기</Link>
                                 </div>
                                 <div className='recommendUser__friends__list'>
-                                    <div className='recommendUser__friends__container'>
-                                        <div className='recommendUser__friends__left'>
-                                            <div className='recommendUser__friends__img'>
-                                                <img src={Person} alt=''></img>
-                                            </div>
-                                            <div>
-                                                <p className='recommendUser__friends__name'>김아무개</p>
-                                                <p className='recommendUser__friends__state'>헬로우</p>
-                                            </div>
-                                        </div>
-                                        <div className='recommendUser__friends__right'>
-                                            구독
-                                        </div>
-                                    </div>
+                            {recommendUsers.map((recommendUser, index) => {
 
-                                    <div className='recommendUser__friends__container'>
+                                return (
+                                    <div className='recommendUser__friends__container' key={index}>
                                         <div className='recommendUser__friends__left'>
                                             <div className='recommendUser__friends__img'>
-                                                <img src={Person} alt=''></img>
+                                                <img src={recommendUser.profileImageUrl === null ? Person : `/profileImg/${recommendUser.profileImageUrl}`} alt=''/>
                                             </div>
                                             <div>
-                                                <p className='recommendUser__friends__name'>장아무개</p>
-                                                <p className='recommendUser__friends__state'>하이</p>
+                                                <p className='recommendUser__friends__name'>
+                                                    {recommendUser?.username?.length > 20 ? `${recommendUser.username.slice(0, 20)}...` : recommendUser?.username}
+                                                </p>
+                                                <p className='recommendUser__friends__state'>
+                                                    {recommendUser.status}
+                                                </p>
                                             </div>
                                         </div>
+
                                         <div className='recommendUser__friends__right'>
                                             구독
                                         </div>
                                     </div>
-                                </div>
+                                );
+                            })}
+
+                            </div>
 
                             </div>
                         </article>
