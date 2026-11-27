@@ -21,3 +21,5 @@
 19. 글쓰기(writeStory) 모달 동작 및 글쓰기창 open시 dim 처리 구현
 20. navBottom 만들고 반응형 작업
 21. navBottom 글쓰기 모달 동작 및 글쓰기창 open시 dim 처리 구현
+22. 구독자 리스트 분기 로직 수정 및 추천 사용자 화면 처리 구현
+

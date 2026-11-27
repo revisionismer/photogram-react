@@ -342,14 +342,7 @@
 .main .container .main-content {
   display: grid;
   grid-template-columns: 2fr 1fr;
-}
 
-/* 2024-09-10 : 여기부터 다시*/
-.main .container .recommendUser {
-  margin-left: 50px;
-  width: 200px;
-  height: 300px;
-  
 }
 
 .profile-image {
@@ -365,16 +358,17 @@
 .main .container .main-content .profileCarousel {
   display: flex;
   height: 100px;
-  
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .main .container .main-content .profileCarousel .profileCarousel__img {
   width: 60px;
   height: 60px;
-
   padding: 3px;
-
   margin-right: 10px;
+  flex-shrink: 0;
 }
 
 .main .container .main-content .profileCarousel .profileCarousel__img img {
@@ -394,113 +388,140 @@
   font-size: 13px;
 }
 
+/* 추천 사용자 전체 */
+.main .container .main-content .recommendUser {
+  width: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* 내 프로필 */
 .main .container .main-content .recommendUser__myself {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
-  
+  margin-top: 5px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
 }
 
-.main .container .main-content .recommendUser__myself .recommendUser__myself__left {
+.main .container .main-content .recommendUser__myself__left {
   display: flex;
   align-items: center;
-
 }
 
-.main .container .main-content .recommendUser__myself .recommendUser__myself__left .recommendUser__myself__img {
+.main .container .main-content .recommendUser__myself__img img {
+  width: 45px;
+  height: 45px;
+  padding: 2px;
+  box-sizing: border-box;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #ddd;
   margin-right: 8px;
 }
 
-.main .container .main-content .recommendUser__myself .recommendUser__myself__left .recommendUser__myself__img img {
-  width: 45px;
-  height: 45px;
-
-  padding: 2px;
-  border-radius: 50%;
-  border: 1px solid grey;
-}
-
-.main .container .main-content .recommendUser__myself .recommendUser__myself__left .recommendUser__myself__name {
+.main .container .main-content .recommendUser__myself__name {
   font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px;
 }
 
-.main .container .main-content .recommendUser__myself .recommendUser__myself__left .recommendUser__myself__state {
-  font-size: 10px;
+.main .container .main-content .recommendUser__myself__state {
+  font-size: 11px;
   color: gray;
+  margin: 0;
 }
 
-.main .container .main-content .recommendUser__myself .recommendUser__myself__right {
+.main .container .main-content .recommendUser__myself__right {
   color: rgb(0, 149, 246);
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
+/* 친구 추천 */
 .main .container .main-content .recommendUser__friends {
   margin-top: 15px;
-  margin-left: 10px;
+  margin-left: 0;
 }
 
-.main .container .main-content .recommendUser__friends .recommendUser__friends__title {
+.main .container .main-content .recommendUser__friends__title {
   display: flex;
   justify-content: space-between;
-
+  align-items: center;
   margin-bottom: 12px;
 }
 
-.main .container .main-content .recommendUser__friends .recommendUser__friends__title h4 {
+.main .container .main-content .recommendUser__friends__title h4 {
   font-size: 14px;
-  color: grey;
+  color: #737373;
+  margin: 0;
 }
 
-.main .container .main-content .recommendUser__friends .recommendUser__friends__title a {
-  font-size: 14px;
-  color: black;
+.main .container .main-content .recommendUser__friends__title a {
+  font-size: 12px;
+  color: #262626;
+  text-decoration: none;
 }
 
-.main .container .main-content .recommendUser__friends .recommendUser__friends__list {
-
-}
-
-.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container {
+/* 친구 목록 */
+.main .container .main-content .recommendUser__friends__container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  padding: 8px 0;
+  margin-bottom: 3px;
 }
 
-.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__left {
+.main .container .main-content .recommendUser__friends__left {
   display: flex;
   align-items: center;
 }
 
-.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__left .recommendUser__friends__img {
-
-}
-
-.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__left .recommendUser__friends__img img {
+.main .container .main-content .recommendUser__friends__img img {
   width: 45px;
   height: 45px;
-
   padding: 2px;
+  box-sizing: border-box;
+  object-fit: cover;
   border-radius: 50%;
-  border: 1px solid grey;
+  border: 1px solid #ddd;
   margin-right: 8px;
 }
 
-.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__left .recommendUser__friends__name {
-  font-size: 12px;
-  margin-bottom: 2px;
-}
-
-.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__left .recommendUser__friends__state {
-  font-size: 10px;
-  color: grey;
-}
-
-.main .container .main-content .recommendUser__friends .recommendUser__friends__list .recommendUser__friends__container .recommendUser__friends__right {
-  color: rgb(0, 149, 246);
+.main .container .main-content .recommendUser__friends__name {
   font-size: 12px;
   font-weight: 600;
+  margin: 0 0 3px;
+}
+
+.main .container .main-content .recommendUser__friends__state {
+  font-size: 11px;
+  color: gray;
+  margin: 0;
+}
+
+/* 구독 버튼 */
+.main .container .main-content .recommendUser__friends__right {
+  color: rgb(0, 149, 246);
+  background-color: #edf6ff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.main .container .main-content .recommendUser__friends__right:hover {
+  background-color: #dceeff;
 }
 
 /* 미디어 쿼리(반응형) : */
